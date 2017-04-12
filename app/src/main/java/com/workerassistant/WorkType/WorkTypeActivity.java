@@ -2,19 +2,23 @@ package com.workerassistant.WorkType;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
+import com.workerassistant.CustomUI.TagFlow.TagFlowFilterAdapter;
 import com.workerassistant.R;
 import com.workerassistant.WorkType.bean.WorkTypeBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkTypeActivity extends AppCompatActivity {
     private List<WorkTypeBean> mDatas;
@@ -22,9 +26,13 @@ public class WorkTypeActivity extends AppCompatActivity {
     private LinearLayout mainLayout;
     private SearchView mSearchView;
     private FrameLayout mProgressBar;
-    private RecyclerView recyclerView;
+//    private RecyclerView recyclerView;
 
-    private WorkTypeAdapter workTypeAdapter;
+    //    private WorkTypeAdapter workTypeAdapter;
+    private ListView mListView;
+    private Button btnReset,btnSubmit;
+    private TagFlowFilterAdapter tagFlowFilterAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +41,40 @@ public class WorkTypeActivity extends AppCompatActivity {
         mainLayout = (LinearLayout)findViewById(R.id.work_type_main_layout);
         mSearchView = (SearchView) findViewById(R.id.work_type_searchview);
         mProgressBar = (FrameLayout) findViewById(R.id.work_type_progress);
+        mListView = (ListView)findViewById(R.id.work_type_list);
 
         mDatas = initDatas();
-        recyclerView = (RecyclerView) findViewById(R.id.work_type_rv_list);
-        workTypeAdapter = new WorkTypeAdapter(this,mDatas);
-        //        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 4, GridLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(workTypeAdapter);
+        List<String> dataTitle = new ArrayList<>();
+        dataTitle.add("热门工种");
+        dataTitle.add("所有工种");
+        Map<String,List<String>> dataTag = new HashMap<>();
+        dataTag.putAll(CustomDatas());
+        tagFlowFilterAdapter = new TagFlowFilterAdapter(this,dataTitle,dataTag);
+        mListView.setAdapter(tagFlowFilterAdapter);
 
+
+        btnReset = (Button)findViewById(R.id.tab_sort_filter_reset);
+        btnSubmit = (Button)findViewById(R.id.tab_sort_filter_submit);
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tagFlowFilterAdapter.resetSelectedTagInt();
+            }
+        });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String res = tagFlowFilterAdapter.handleResult();
+
+                 /****************************/
+                /******** 处理筛选结果  ******* /
+                /*****************************/
+
+                Log.d("res:",res);
+                String[]classfied = res.split(" ");
+//                adapter.classfiedByTagCollection(classfied);
+            }
+        });
 
         mSearchFragment = (SearchWorkTypeFragment) getSupportFragmentManager().findFragmentById(R.id.work_type_search_fragment);
         mainLayout.postDelayed(new Runnable() {
@@ -50,8 +84,10 @@ public class WorkTypeActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(View.GONE);
 
             }
-        },1000);
+        },500);
         initSearch();
+
+
     }
 
 
@@ -93,23 +129,37 @@ public class WorkTypeActivity extends AppCompatActivity {
         }
         super.onBackPressed();
     }
-    // 数据处理完成后回调
+
+    /**
+     *  自定义数据
+     *  分类标题List,工种数据List
+     *  @return 自定义的工种数据
+     */
+
+    private Map<String,List<String>> CustomDatas(){
+        Map<String,List<String>> dataTag = new HashMap<>();
+        List<String> tag1 = new ArrayList<>();
+
+        for(int i=0 ;i<4;i++){
+            tag1.add(mDatas.get(i).getWorkTypeName());
+        }
+        dataTag.put("热门工种",tag1);
+        List<String> tag2 = new ArrayList<>();
+        for(int i=4 ;i<mDatas.size();i++){
+            tag2.add(mDatas.get(i).getWorkTypeName());
+        }
+        dataTag.put("所有工种",tag2);
+        return dataTag;
+    }
 
 
-//    public void update(View view) {
-//        List<CityBean> list = new ArrayList<>();
-//        list.add(new CityBean("杭州市"));
-//        list.add(new CityBean("北京市"));
-//        list.add(new CityBean("上海市"));
-//        list.add(new CityBean("广州市"));
-//        mHotCityAdapter.addDatas(list);
-//        Toast.makeText(this, "更新数据", Toast.LENGTH_SHORT).show();
-//    }
-
-
+    /**
+     * 读取String.xml中的数据
+     * @return
+     */
     private List<WorkTypeBean> initDatas() {
         List<WorkTypeBean> list = new ArrayList<>();
-        List<String> workTypeStrings = Arrays.asList(getResources().getStringArray(R.array.provinces));
+        List<String> workTypeStrings = Arrays.asList(getResources().getStringArray(R.array.worktype));
         for (String item : workTypeStrings) {
             WorkTypeBean WorkTypeEntity = new WorkTypeBean();
             WorkTypeEntity.setWorkTypeName(item);
