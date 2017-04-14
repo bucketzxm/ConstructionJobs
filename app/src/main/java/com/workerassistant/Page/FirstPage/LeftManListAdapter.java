@@ -39,7 +39,7 @@ public class LeftManListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.second_page_item, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.hottest_man_item, null);
             holder = new ViewHolder();
 //            holder.nameTV = (TextView) convertView.findViewById(R.id.left_item_name);
             convertView.setTag(holder);

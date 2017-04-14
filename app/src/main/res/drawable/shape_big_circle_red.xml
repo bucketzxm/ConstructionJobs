@@ -13,11 +13,24 @@
         android:height="64dp"
         android:width="64dp"
         />
-    <stroke
-        android:width="1.5px"
-        android:color="@color/color11"
+    <!--<stroke-->
+        <!--android:width="1.5px"-->
+        <!--android:color="@color/color11"-->
+        <!--/>-->
+    <gradient
+        android:angle="90"
+        android:centerX="0.5"
+        android:centerY="-0.2"
+        android:type="radial"
+        android:useLevel="false"
+        android:gradientRadius="94dp"
+        android:startColor="#ff0844"
+        android:endColor="#ffb199"
         />
-    <solid android:color="@color/color11" />
+    <!--#fc354c
+→
+#0abfbc-->
+    <!--<solid android:color="@color/color11" />-->
 </shape>
 <!--<selector xmlns:android="http://schemas.android.com/apk/res/android">-->
     <!--<item android:state_pressed="true">-->
