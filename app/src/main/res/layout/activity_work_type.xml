@@ -6,7 +6,7 @@
     android:background="@android:color/white"
     android:orientation="vertical"
     android:id="@+id/work_type_main_layout">
-
+    <include layout="@layout/toolbar_back_title" />
     <android.support.v7.widget.SearchView
         android:id="@+id/work_type_searchview"
         android:layout_width="match_parent"

@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.workerassistant.CustomUI.TagFlow.TagFlowFilterAdapter;
 import com.workerassistant.R;
@@ -86,11 +88,22 @@ public class WorkTypeActivity extends AppCompatActivity {
             }
         },500);
         initSearch();
-
+        initTopbar("选择工种");
 
     }
-
-
+    private TextView title;
+    private ImageView back;
+    public void initTopbar(String titleString){
+        title=(TextView)findViewById(R.id.title_toolbar);
+        title.setText(titleString);
+        back= (ImageView)findViewById(R.id.back_toolbar);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 
     private void initSearch() {
         getSupportFragmentManager().beginTransaction().hide(mSearchFragment).commit();

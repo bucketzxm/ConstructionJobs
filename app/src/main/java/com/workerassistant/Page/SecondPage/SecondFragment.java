@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,7 +33,7 @@ public class SecondFragment extends Fragment implements OnItemClickListener, LFR
     private View rootView = null;//缓存Fragment view
     private RecyclerView recycleview;
 //    private ListView listView;
-    private FindWorkAdapter adapter;
+    private SecondPageListAdapter adapter;
     private  List<String> data;
 
     @Override
@@ -54,8 +53,8 @@ public class SecondFragment extends Fragment implements OnItemClickListener, LFR
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setItemAnimator(new DefaultItemAnimator());
         recycleview.addItemDecoration(new RecyclerViewDivider(getActivity(),LinearLayoutManager.VERTICAL));
-        adapter = new FindWorkAdapter(data);
-        recycleview.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL));
+        adapter = new SecondPageListAdapter(data);
+//        recycleview.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL));
         recycleview.setAdapter(adapter);
 
            }

@@ -10,7 +10,7 @@
     <!--<include layout="@layout/toolbar_title"-->
         <!--android:id="@+id/tool_bar_layout"-->
         <!--/>-->
-    <include layout="@layout/topbar_pick_city_work_type"  />
+    <!--<include layout="@layout/topbar_pick_city_work_type"  />-->
 
     <FrameLayout
         android:id="@+id/frame_content"

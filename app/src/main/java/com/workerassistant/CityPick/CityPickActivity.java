@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.workerassistant.CustomUI.IndexBar.widget.IndexBar;
@@ -36,13 +37,15 @@ public class CityPickActivity extends AppCompatActivity {
      * 显示指示器DialogText
      */
     private TextView mTvSideBarHint;
+    private TextView title;
+    private ImageView back;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_pick);
-
+        initTopbar("选择城市");
         mRv = (RecyclerView) findViewById(R.id.rv);
         mRv.setLayoutManager(mManager = new LinearLayoutManager(this));
 
@@ -125,5 +128,15 @@ public class CityPickActivity extends AppCompatActivity {
                 .invalidate();
         mHeaderAdapter.notifyDataSetChanged();
     }
-
+    public void initTopbar(String titleString){
+        title=(TextView)findViewById(R.id.title_toolbar);
+        title.setText(titleString);
+        back= (ImageView)findViewById(R.id.back_toolbar);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 }
