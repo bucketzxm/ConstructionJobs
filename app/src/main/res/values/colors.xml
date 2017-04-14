@@ -3,13 +3,20 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
+    <color name="colorTopBarText">#000000</color>
+    <color name="colorTopBar">#FFFFFF</color>
     <color name="partTranslucent">#39000000</color>
 
-    <color name="color1">#E71D36</color>
-    <color name="color2">#2EC4B6</color>
-    <color name="color3">#EFFFE9</color>
-    <color name="color4">#011627</color>
+    <color name="color1">#f1404b</color>
+    <color name="color2">#dddfe6</color>
+    <color name="color3">#f4f5f9</color>
+    <color name="color4">#252c41</color>
+
+    <color name="color11">#E71D36</color>
+    <color name="color12">#2EC4B6</color>
+    <color name="color13">#EFFFE9</color>
+    <color name="color14">#011627</color>
+
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
     <!--tag's color-->

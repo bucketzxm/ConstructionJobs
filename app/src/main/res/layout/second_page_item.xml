@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/md_grey_50">
+    <LinearLayout
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp">
+            <TextView
+                android:id="@+id/second_page_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:text="工人姓名"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_toRightOf ="@id/second_page_item_name"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:id="@+id/second_page_item_statu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="10sp"
+                android:text="空闲"/>
+            <TextView
+                android:id="@+id/second_page_item_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="10sp"
+                android:text="包工头"
+                android:layout_toRightOf ="@id/second_page_item_statu"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                />
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:isIndicator="true"
+                android:layout_marginLeft="8dp"
+                android:id="@+id/second_page_item_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Base.Widget.AppCompat.RatingBar"
+                android:minHeight="14dp"
+                android:maxHeight="14dp"
+
+                app:mrb_progressTint="@color/md_amber_600"
+                app:mrb_secondaryProgressTint="@color/md_amber_600"
+                />
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp">
+            <TextView
+                android:id="@+id/second_page_item_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="保温工人"
+                android:textColor="@color/color12"
+                android:textSize="16sp"/>
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="+8613900003333"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/second_page_item_phone"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

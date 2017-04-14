@@ -39,4 +39,6 @@ dependencies {
 
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
     compile 'com.squareup.okio:okio:1.11.0'
+
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
 }
