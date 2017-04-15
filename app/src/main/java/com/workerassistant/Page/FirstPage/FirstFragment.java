@@ -7,15 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.workerassistant.CityPick.CityPickActivity;
 import com.workerassistant.R;
 import com.workerassistant.WorkType.WorkTypeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnRefreshListener {
     public static FirstFragment newInstance() {
@@ -29,7 +33,7 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
 //    private static List<Cloth>dataHot = new ArrayList<>();
 //    private static List<Cloth>newDatashow = new ArrayList<>();
     private ListView manList,workList;
-
+    private ImageView imgBg;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +47,13 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
         return rootView;
     }
     private void initTopBar(){
+        imgBg = (ImageView) rootView.findViewById(R.id.first_page_bg);
+        Glide.with(this)
+                .load("http://img.hb.aicdn.com/8a8801b28b81d03dbc870a7ad9b4aa731206704c8578b-QNk5yn_fw658")
+                .error(R.drawable.default_ptr_flip)
+                .bitmapTransform(new BlurTransformation(getActivity(), 5))
+                .crossFade()
+                .into(imgBg);
         rootView.findViewById(R.id.top_bar_pick_city).setOnClickListener(
                 new View.OnClickListener() {
                     @Override

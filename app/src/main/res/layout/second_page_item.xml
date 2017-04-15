@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/md_grey_50">
+    android:background="@color/white">
     <LinearLayout
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:text="工人姓名"
                 android:textColor="@color/black"/>
             <TextView
@@ -76,19 +76,21 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="保温工人"
-                android:textColor="@color/color12"
+                android:textColor="@color/md_red_600"
                 android:textSize="16sp"/>
 
 
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="+8613900003333"
                 android:textSize="18sp"
+                android:textColor="@color/md_teal_600"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/second_page_item_phone"/>

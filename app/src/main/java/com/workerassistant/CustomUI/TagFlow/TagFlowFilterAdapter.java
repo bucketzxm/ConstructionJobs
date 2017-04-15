@@ -1,6 +1,7 @@
 package com.workerassistant.CustomUI.TagFlow;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.TypedValue;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.workerassistant.R;
 
@@ -122,12 +124,15 @@ public class TagFlowFilterAdapter extends BaseAdapter implements View.OnClickLis
             tv.setBackgroundResource(R.drawable.tab_shape_tab_filter_text_touch_on);
 
         }
-        else
-        {
-            v.setTag(R.id.tag_selected_int,0);
-            tv.setTextColor(context.getResources().getColor(R.color.flow_txt_off));
-            tv.setBackgroundResource(R.drawable.tab_shape_tab_filter_text_touch_off);
-        }
+        Toast.makeText(context, "选择工种：" + tv.getText() , Toast.LENGTH_SHORT).show();
+        Activity mainActivity = (Activity)context;
+        mainActivity.finish();
+//        else
+//        {
+//            v.setTag(R.id.tag_selected_int,0);
+//            tv.setTextColor(context.getResources().getColor(R.color.flow_txt_off));
+//            tv.setBackgroundResource(R.drawable.tab_shape_tab_filter_text_touch_off);
+//        }
 
 //        Log.d("tag",v.getTag(R.id.tag_selected_int)+"");
     }

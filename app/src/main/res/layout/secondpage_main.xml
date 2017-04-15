@@ -4,10 +4,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/topbar_pick_city_work_type"  />
-    <android.support.v7.widget.RecyclerView
+    <me.leefeng.lfrecyclerview.LFRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/second_page_rv_list"
+        android:background="@color/md_grey_100"
         >
-    </android.support.v7.widget.RecyclerView>
+    </me.leefeng.lfrecyclerview.LFRecyclerView>
 </LinearLayout>

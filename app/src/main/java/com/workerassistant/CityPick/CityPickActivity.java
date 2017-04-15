@@ -1,7 +1,6 @@
 package com.workerassistant.CityPick;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -57,7 +56,7 @@ public class CityPickActivity extends AppCompatActivity {
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startActivity(new Intent(v.getContext(), CityPickActivity.class));
+                           // startActivity(new Intent(v.getContext(), CityPickActivity.class));
                         }
                     });
                     return;
@@ -66,7 +65,7 @@ public class CityPickActivity extends AppCompatActivity {
             }
         };
 //        mHeaderAdapter.setHeaderView(0,R.layout.item_city, "测试头部");
-        mHeaderAdapter.setHeaderView(0,R.layout.search_view, "测试头部");
+        mHeaderAdapter.setHeaderView(0,R.layout.search_view, "搜索框");
         mRv.setAdapter(mHeaderAdapter);
         mRv.addItemDecoration(mDecoration = new SuspensionDecoration(this, mDatas).setHeaderViewCount(mHeaderAdapter.getHeaderViewCount()));
 

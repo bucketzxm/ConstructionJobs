@@ -8,15 +8,16 @@ import android.widget.TextView;
 
 import com.workerassistant.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SecondPageListAdapter extends RecyclerView.Adapter<SecondPageListAdapter.MasonryView> {
 
-    private final List<String> list;
+    private List<String> datas = new ArrayList<>();
 
     public SecondPageListAdapter(List<String> list) {
 
-        this.list=list;
+        this.datas =list;
     }
 
     @Override
@@ -27,13 +28,13 @@ public class SecondPageListAdapter extends RecyclerView.Adapter<SecondPageListAd
 
     @Override
     public void onBindViewHolder(MasonryView holder, int position) {
-        holder.textView.setText(list.get(position));
+        holder.textView.setText(datas.get(position));
 //        holder.textView.setPadding(0, 20 * position, 0, 0);
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return datas.size();
     }
 
     class MasonryView extends RecyclerView.ViewHolder {
@@ -46,5 +47,17 @@ public class SecondPageListAdapter extends RecyclerView.Adapter<SecondPageListAd
 
         }
 
+    }
+
+    public void addDataList(List<String> d){
+        datas.addAll(d);
+    }
+
+    public void addFirstData(String d){
+        datas.add(0,d);
+    }
+
+    public void addLastData(String d){
+        datas.add(getItemCount(),d);
     }
 }

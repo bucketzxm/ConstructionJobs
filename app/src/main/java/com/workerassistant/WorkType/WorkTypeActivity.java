@@ -3,9 +3,7 @@ package com.workerassistant.WorkType;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +30,7 @@ public class WorkTypeActivity extends AppCompatActivity {
 
     //    private WorkTypeAdapter workTypeAdapter;
     private ListView mListView;
-    private Button btnReset,btnSubmit;
+//    private Button btnReset,btnSubmit;
     private TagFlowFilterAdapter tagFlowFilterAdapter;
 
     @Override
@@ -54,29 +52,6 @@ public class WorkTypeActivity extends AppCompatActivity {
         tagFlowFilterAdapter = new TagFlowFilterAdapter(this,dataTitle,dataTag);
         mListView.setAdapter(tagFlowFilterAdapter);
 
-
-        btnReset = (Button)findViewById(R.id.tab_sort_filter_reset);
-        btnSubmit = (Button)findViewById(R.id.tab_sort_filter_submit);
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tagFlowFilterAdapter.resetSelectedTagInt();
-            }
-        });
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String res = tagFlowFilterAdapter.handleResult();
-
-                 /****************************/
-                /******** 处理筛选结果  ******* /
-                /*****************************/
-
-                Log.d("res:",res);
-                String[]classfied = res.split(" ");
-//                adapter.classfiedByTagCollection(classfied);
-            }
-        });
 
         mSearchFragment = (SearchWorkTypeFragment) getSupportFragmentManager().findFragmentById(R.id.work_type_search_fragment);
         mainLayout.postDelayed(new Runnable() {
@@ -184,4 +159,24 @@ public class WorkTypeActivity extends AppCompatActivity {
 }
 
 
-
+/*
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tagFlowFilterAdapter.resetSelectedTagInt();
+            }
+        });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String res = tagFlowFilterAdapter.handleResult();
+*/
+                /****************************/
+                /******** 处理筛选结果  ******* /
+                 /*****************************/
+/*
+Log.d("res:",res);
+        String[]classfied = res.split(" ");
+//                adapter.classfiedByTagCollection(classfied);
+        }
+        });  */

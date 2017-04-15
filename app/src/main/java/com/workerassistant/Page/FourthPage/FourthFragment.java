@@ -33,6 +33,7 @@ public class FourthFragment extends Fragment {//implements SwipeRefreshLayout.On
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         rootView = inflater.inflate(R.layout.fourth_page_main, container, false);
         InitBase();
 //        lay_fresh = (SwipeRefreshLayout) rootView.findViewById(R.id.nearpage_refresh);
@@ -47,14 +48,13 @@ public class FourthFragment extends Fragment {//implements SwipeRefreshLayout.On
     private TextView tvName,tvWorkType,tvIdentity,tvcity,tvphone;
     private void InitBase()
     {
-        tvName = (TextView)rootView.findViewById(R.id.edit_self_info_name);
 
         sefiBg = (ImageView)rootView.findViewById(R.id.fourth_page_avatarBG);
         Glide.with(this)
                 .load("http://a3.topitme.com/7/a8/6f/11220277163fa6fa87o.jpg")
                 .error(R.drawable.default_ptr_flip)
                 .bitmapTransform(new BlurTransformation(getActivity(), 15))
-                .crossFade(1000)
+                .crossFade()
                 .into(sefiBg);
         sefi = (ImageView)rootView.findViewById(R.id.fourth_page_avatar);
         Glide.with(this)

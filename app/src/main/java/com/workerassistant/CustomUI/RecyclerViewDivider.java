@@ -33,7 +33,6 @@ public class RecyclerViewDivider extends RecyclerView.ItemDecoration {
             throw new IllegalArgumentException("请输入正确的参数！");
         }
         mOrientation = orientation;
-
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();

@@ -1,5 +1,6 @@
 package com.workerassistant.CityPick;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,7 +45,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "pos:" + position + mDatas.get(position).getCity(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "选择城市：" + position + mDatas.get(position).getCity(), Toast.LENGTH_SHORT).show();
+                Activity mainActivity = (Activity)mContext;
+                mainActivity.finish();
             }
         });
     }

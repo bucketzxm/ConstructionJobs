@@ -2,10 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/md_grey_50"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
-    android:background="@color/md_grey_100">
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:background="@color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,43 +15,32 @@
             android:id="@+id/third_page_item_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/color12"
-            android:textSize="16sp"
+            android:textColor="@color/md_teal_600"
             android:text="上海"/>
         <TextView
-            android:layout_marginLeft="48dp"
+            android:layout_marginLeft="16dp"
             android:id="@+id/third_page_work_item_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
-            android:textSize="16sp"
-            android:textColor="@color/color11"
+            android:textColor="@color/md_red_500"
             android:text="油漆工"/>
 
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:id="@+id/third_page_number_item_needed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="10人"/>
-        <TextView
-            android:layout_marginTop="2dp"
-            android:textSize="14sp"
-            android:layout_gravity="end"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:id="@+id/third_page_item_originator_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="+8613900001111"/>
+            <TextView
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:id="@+id/third_page_number_item_needed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10人"/>
+            <TextView
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:id="@+id/third_page_item_originator_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="+8613900001111"/>
     </LinearLayout>
 </LinearLayout>

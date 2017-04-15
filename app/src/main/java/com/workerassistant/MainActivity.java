@@ -2,11 +2,18 @@ package com.workerassistant;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 
+import com.workerassistant.Page.FirstPage.FirstFragment;
+import com.workerassistant.Page.FourthPage.FourthFragment;
+import com.workerassistant.Page.SecondPage.SecondFragment;
 import com.workerassistant.Page.TextTabFragment;
+import com.workerassistant.Page.ThirdPage.ThirdFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 //    private TextView toolbarTitle;
     private TextTabFragment mTextTabFragment;
     @Override
@@ -14,10 +21,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initBaseWidgets();
-        setCurrentFragment();
+        initBottomTab();
 
     }
     private void initBaseWidgets(){
+
 //        toolbarTitle = (TextView)findViewById(R.id.toolbar_title_txt);
 //        findViewById(R.id.top_bar_pick_city).setOnClickListener(
 //                new View.OnClickListener() {
@@ -43,12 +51,123 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private void setCurrentFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (mTextTabFragment == null) {
-            mTextTabFragment = TextTabFragment.newInstance();
+
+    private TextView mTHome, mSecond, mThird, mTMe;
+    public FirstFragment firstFragment;
+    public SecondFragment secondFragment;
+    public ThirdFragment thirdFragment;
+    public FourthFragment fourthFragment;
+     public void initBottomTab(){
+        mTHome = (TextView) findViewById(R.id.tv_home);
+        mSecond = (TextView)findViewById(R.id.tv_second);
+        mThird = (TextView) findViewById(R.id.tv_third);
+        mTMe = (TextView)findViewById(R.id.tv_person);
+
+        mTHome.setOnClickListener(this);
+        mSecond.setOnClickListener(this);
+        mThird.setOnClickListener(this);
+        mTMe.setOnClickListener(this);
+        setDefaultFragment();
+    }
+
+    /**
+     * set the default Fragment
+     */
+    private void setDefaultFragment() {
+        switchFrgment(0);
+        //set the defalut tab state
+        setTabState(mTHome, R.drawable.ic_home_black_24dp, getMyColor(R.color.color1));
+    }
+
+    @Override
+    public void onClick(View view) {
+        resetTabState();//reset the tab state
+        switch (view.getId()) {
+            case R.id.tv_home:
+                setTabState(mTHome, R.drawable.ic_home_black_24dp, getMyColor(R.color.color1));
+                switchFrgment(0);
+                break;
+            case R.id.tv_second:
+                setTabState(mSecond, R.drawable.ic_face_black_24dp, getMyColor(R.color.color1));
+                switchFrgment(1);
+                break;
+            case R.id.tv_third:
+                setTabState(mThird, R.drawable.ic_line_style_black_24dp, getMyColor(R.color.color1));
+                switchFrgment(2);
+                break;
+            case R.id.tv_person:
+                setTabState(mTMe, R.drawable.ic_account_box_black_24dp, getMyColor(R.color.color1));
+                switchFrgment(3);
+                break;
+
         }
-        transaction.replace(R.id.frame_content, mTextTabFragment);
+    }
+
+    /**
+     * switch the fragment accordting to id
+     * @param i id
+     */
+    public void switchFrgment(int i) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        switch (i) {
+            case 0:
+                if (firstFragment == null) {
+                    firstFragment = FirstFragment.newInstance();
+                }
+                transaction.replace(R.id.sub_content, firstFragment);
+                break;
+            case 1:
+                if (secondFragment == null) {
+                    secondFragment = SecondFragment.newInstance();
+                }
+                transaction.replace(R.id.sub_content, secondFragment);
+                break;
+            case 2:
+                if (thirdFragment == null) {
+                    thirdFragment = ThirdFragment.newInstance();
+                }
+                transaction.replace(R.id.sub_content, thirdFragment);
+                break;
+            case 3:
+                if (fourthFragment == null) {
+                    fourthFragment = FourthFragment.newInstance();
+                }
+                transaction.replace(R.id.sub_content, fourthFragment);
+                break;
+        }
         transaction.commit();
     }
+
+    /**
+     * set the tab state of bottom navigation bar
+     *
+     * @param textView the text to be shown
+     * @param image    the image
+     * @param color    the text color
+     */
+    private void setTabState(TextView textView, int image, int color) {
+        textView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, image, 0, 0);//Call requires API level 17
+        textView.setTextColor(color);
+    }
+
+
+    /**
+     * revert the image color and text color to black
+     */
+    private void resetTabState() {
+        setTabState(mTHome, R.drawable.ic_home_grey_500_24dp, getMyColor(R.color.md_grey_500));
+        setTabState(mSecond, R.drawable.ic_face_grey_500_24dp, getMyColor(R.color.md_grey_500));
+        setTabState(mThird, R.drawable.ic_line_style_grey_500_24dp, getMyColor(R.color.md_grey_500));
+        setTabState(mTMe, R.drawable.ic_account_box_grey_500_24dp, getMyColor(R.color.md_grey_500));
+
+    }
+
+    /**
+     * @param i the color id
+     * @return color
+     */
+    private int getMyColor(int i) {
+        return ContextCompat.getColor(this, i);
+    }
+
 }

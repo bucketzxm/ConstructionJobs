@@ -72,7 +72,7 @@ public class SearchCityFragment extends Fragment {
 
         @Override
         public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-            final VH holder = new VH(LayoutInflater.from(getActivity()).inflate(R.layout.item_work_type, parent, false));
+            final VH holder = new VH(LayoutInflater.from(getActivity()).inflate(R.layout.item_black_border, parent, false));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

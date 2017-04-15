@@ -44,7 +44,7 @@ public class WorkTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return new HolderTypeTextHead(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tv_title, parent, false));
             case TYPE_HOT:
             case TYPE_TEXT:
-                return new HolderTypeText(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_work_type, parent, false));
+                return new HolderTypeText(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_black_border, parent, false));
             default:
                 Log.d("error","viewholder is null");
                 return null;

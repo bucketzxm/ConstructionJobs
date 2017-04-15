@@ -17,11 +17,11 @@ import java.util.List;
 
 public class ThirdPageListAdapter extends RecyclerView.Adapter<ThirdPageListAdapter.MasonryView> {
 
-    private final List<String> list;
+    private final List<String> datas;
     private Context context;
     public ThirdPageListAdapter(Context context, List<String> list) {
         this.context = context;
-        this.list=list;
+        this.datas=list;
     }
 
     @Override
@@ -32,12 +32,12 @@ public class ThirdPageListAdapter extends RecyclerView.Adapter<ThirdPageListAdap
 
     @Override
     public void onBindViewHolder(MasonryView holder, int position) {
-        holder.textView.setText(list.get(position));
+        holder.textView.setText(datas.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return datas.size();
     }
 
     class MasonryView extends RecyclerView.ViewHolder {
@@ -52,4 +52,15 @@ public class ThirdPageListAdapter extends RecyclerView.Adapter<ThirdPageListAdap
 
     }
 
+    public void addDataList(List<String> d){
+        datas.addAll(d);
+    }
+
+    public void addFirstData(String d){
+        datas.add(0,d);
+    }
+
+    public void addLastData(String d){
+        datas.add(getItemCount(),d);
+    }
 }

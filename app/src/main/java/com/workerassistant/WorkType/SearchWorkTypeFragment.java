@@ -72,7 +72,7 @@ public class SearchWorkTypeFragment extends Fragment {
 
         @Override
         public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-            final VH holder = new VH(LayoutInflater.from(getActivity()).inflate(R.layout.item_work_type, parent, false));
+            final VH holder = new VH(LayoutInflater.from(getActivity()).inflate(R.layout.item_search_item, parent, false));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -131,7 +131,7 @@ public class SearchWorkTypeFragment extends Fragment {
 
             public VH(View itemView) {
                 super(itemView);
-                tvName = (TextView) itemView.findViewById(R.id.work_type_tv_item);
+                tvName = (TextView) itemView.findViewById(R.id.tv_item_search);
             }
         }
     }
