@@ -13,6 +13,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by eva on 2017/4/21.
@@ -23,7 +25,8 @@ public class netConfigure {
     public static String baseUrl= "http://10.101.1.151:27017/";
     static Retrofit retrofit = null;
     private static volatile netConfigure self;
-//懒汉法
+    public Observable observableAllPersonData;
+    //懒汉法
     public static netConfigure getInstance(){
         if (self == null) {
             synchronized (netConfigure.class) {
@@ -36,10 +39,6 @@ public class netConfigure {
         return self;
     }
     private static void init(){
-//        retrofit= new Retrofit.Builder()
-//            .baseUrl(baseUrl)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build();
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 //增加返回值为String的支持
@@ -50,10 +49,35 @@ public class netConfigure {
 //                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
-    public void getAllPersonData(){
+    public netService.PersonService getPersonService(){
         netService.PersonService personService = retrofit.create(netService.PersonService.class);
-        Call<List<PersonBean>> callAllPerson = personService.getPerson();
-//        List<String> persons = result.execute();
+        return personService;
+    }
+
+    public Observable getObservableAllPersonData(){
+        netService.PersonService personService = retrofit.create(netService.PersonService.class);
+        final Call<List<PersonBean>> callAllPerson = personService.getPerson();
+
+        observableAllPersonData = Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
+            @Override
+            public void call(Subscriber<? super List<PersonBean>> subscriber) {
+                Response<List<PersonBean>> beanResponse = null;
+                try {
+                    beanResponse = callAllPerson.execute();
+                    subscriber.onNext(beanResponse.body());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                subscriber.onCompleted();
+            }
+        });
+        return observableAllPersonData;
+    }
+
+    public void LogGetAllPersonData(){
+        netService.PersonService personService = retrofit.create(netService.PersonService.class);
+        final Call<List<PersonBean>> callAllPerson = personService.getPerson();
+
         callAllPerson.enqueue(new Callback<List<PersonBean>>() {
             @Override
             public void onResponse(Call<List<PersonBean>> call, Response<List<PersonBean>> response) {
@@ -70,10 +94,6 @@ public class netConfigure {
                 t.printStackTrace();
             }
         });
-
-//        final Observable observable = Observable.create(new Observable.On)
-
-
     }
 
 
