@@ -14,6 +14,7 @@ public class PersonBean {
     String level;
     String city;
     String workType;
+    String rating;
     public String getName() {
         return name;
     }
@@ -36,6 +37,14 @@ public class PersonBean {
 
     public String getLevel() {
         return level;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     public void setAge(String age) {
@@ -71,6 +80,7 @@ public class PersonBean {
         map.put("level",getLevel());
         map.put("city",getCity());
         map.put("workType",getWorkType());
+        map.put("rating",getRating());
         return map.toString();
 
     }

@@ -92,14 +92,35 @@ public class netConfigure {
         Log.d(TAG,gson.toJson(personBean));
 //        RequestBody body=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),gson.toJson(personBean));
 //        Call<PersonBean> callInsertPerson = personService.insertPerson(body);
+
+//        final Call<PersonBean> callInsertPerson = personService.insertOnePerson(personBean);
+//        Observable observable = Observable.create(new Observable.OnSubscribe<PersonBean>() {
+//            @Override
+//            public void call(Subscriber<? super PersonBean> subscriber) {
+//                Response<PersonBean> beanResponse = null;
+//                try {
+//                    beanResponse = callInsertPerson.execute();
+//                    subscriber.onNext(beanResponse.body());
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//                subscriber.onCompleted();
+//            }
+//        });
+
+
         Call<PersonBean> callInsertPerson = personService.insertOnePerson(personBean);
         callInsertPerson.enqueue(new Callback<PersonBean>() {
             @Override
             public void onResponse(Call<PersonBean> call, Response<PersonBean> response) {
                 Log.d(TAG,"callAllPerson:onResponse code:"+response.raw().code() );
                 PersonBean  res = response.body();
-                if(res!=null){
-                    Log.d(TAG,"callAllPerson:onResponse "+ res.toString() );
+                if(response.isSuccessful()) {
+                    //提醒更新
+
+                    if (res != null) {
+                        Log.d(TAG, "callAllPerson:onResponse " + res.toString());
+                    }
                 }
             }
 

@@ -63,9 +63,6 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.third_page_main, container, false);
-//        lay_fresh = (SwipeRefreshLayout) rootView.findViewById(R.id.nearpage_refresh);
-//        lay_fresh.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
-//        lay_fresh.setOnRefreshListener(this);
         initBase();
         initList();
         initPopUpWindow();

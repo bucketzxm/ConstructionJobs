@@ -12,7 +12,6 @@ import com.workerassistant.Page.FourthPage.FourthFragment;
 import com.workerassistant.Page.SecondPage.SecondFragment;
 import com.workerassistant.Page.TextTabFragment;
 import com.workerassistant.Page.ThirdPage.ThirdFragment;
-import com.workerassistant.network.netConfigure;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 //    private TextView toolbarTitle;
@@ -23,8 +22,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initBaseWidgets();
         initBottomTab();
-        netConfigure net = netConfigure.getInstance();
-        net.getAllPersonData();
     }
     private void initBaseWidgets(){
 
@@ -60,15 +57,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ThirdFragment thirdFragment;
     public FourthFragment fourthFragment;
      public void initBottomTab(){
+
         mTHome = (TextView) findViewById(R.id.tv_home);
         mSecond = (TextView)findViewById(R.id.tv_second);
         mThird = (TextView) findViewById(R.id.tv_third);
         mTMe = (TextView)findViewById(R.id.tv_person);
-
         mTHome.setOnClickListener(this);
         mSecond.setOnClickListener(this);
         mThird.setOnClickListener(this);
         mTMe.setOnClickListener(this);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        firstFragment = FirstFragment.newInstance();
+        secondFragment = SecondFragment.newInstance();
+        thirdFragment = ThirdFragment.newInstance();
+        fourthFragment = FourthFragment.newInstance();
+        transaction.add(R.id.sub_content,firstFragment,"FirstFragment");
+        transaction.add(R.id.sub_content,secondFragment,"SecondFragment");
+        transaction.add(R.id.sub_content,thirdFragment,"ThirdFragment");
+        transaction.add(R.id.sub_content,fourthFragment,"FourthFragment");
+        transaction.commit();
+
+
         setDefaultFragment();
     }
 
@@ -110,31 +120,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @param i id
      */
     public void switchFrgment(int i) {
+        if(i>4)return;
+        // 只有4个页面
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if(firstFragment!=null){
+            transaction.hide(firstFragment);
+        }
+        if(secondFragment!=null){
+            transaction.hide(secondFragment);
+        }
+        if(thirdFragment !=null){
+            transaction.hide(thirdFragment);
+        }
+        if(fourthFragment!=null){
+            transaction.hide(fourthFragment);
+        }
+
         switch (i) {
             case 0:
-                if (firstFragment == null) {
-                    firstFragment = FirstFragment.newInstance();
-                }
-                transaction.replace(R.id.sub_content, firstFragment);
+                transaction.show(firstFragment);
                 break;
             case 1:
-                if (secondFragment == null) {
-                    secondFragment = SecondFragment.newInstance();
-                }
-                transaction.replace(R.id.sub_content, secondFragment);
+                transaction.show(secondFragment);
                 break;
             case 2:
-                if (thirdFragment == null) {
-                    thirdFragment = ThirdFragment.newInstance();
-                }
-                transaction.replace(R.id.sub_content, thirdFragment);
+                transaction.show(thirdFragment);
                 break;
             case 3:
-                if (fourthFragment == null) {
-                    fourthFragment = FourthFragment.newInstance();
-                }
-                transaction.replace(R.id.sub_content, fourthFragment);
+                transaction.show(fourthFragment);
                 break;
         }
         transaction.commit();

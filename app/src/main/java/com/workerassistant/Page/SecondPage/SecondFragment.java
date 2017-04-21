@@ -59,6 +59,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         initBase();
         initList();
         initPopUpWindow();
+        onRefresh();
         return rootView;
     }
     private PopupWindow popupWindow;
