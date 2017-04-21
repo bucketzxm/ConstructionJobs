@@ -64,7 +64,7 @@ public class CityPickActivity extends AppCompatActivity {
                 holder.setText(R.id.tvCity, (String) o);
             }
         };
-//        mHeaderAdapter.setHeaderView(0,R.layout.item_city, "测试头部");
+//        mHeaderAdapter.setHeaderView(0,R.layout.item_city, "头部");
         mHeaderAdapter.setHeaderView(0,R.layout.search_view, "搜索框");
         mRv.setAdapter(mHeaderAdapter);
         mRv.addItemDecoration(mDecoration = new SuspensionDecoration(this, mDatas).setHeaderViewCount(mHeaderAdapter.getHeaderViewCount()));

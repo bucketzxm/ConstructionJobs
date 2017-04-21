@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.workerassistant.R;
+import com.workerassistant.Util.rxbus.RxBus;
 
 import java.util.List;
 
@@ -46,6 +47,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "选择城市：" + position + mDatas.get(position).getCity(), Toast.LENGTH_SHORT).show();
+                CityBean city = new CityBean();
+                city.setCity(mDatas.get(position).getCity());
+                RxBus.getDefault().post(city);
                 Activity mainActivity = (Activity)mContext;
                 mainActivity.finish();
             }

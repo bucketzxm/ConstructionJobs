@@ -1,25 +1,43 @@
 package com.workerassistant.Page.ThirdPage;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.workerassistant.CityPick.CityBean;
+import com.workerassistant.CityPick.CityPickActivity;
 import com.workerassistant.CustomUI.RecyclerViewDivider;
 import com.workerassistant.R;
+import com.workerassistant.Util.ScreenUtils;
+import com.workerassistant.Util.rxbus.RxBus;
+import com.workerassistant.WorkType.WorkTypeActivity;
+import com.workerassistant.bean.PersonBean;
+import com.workerassistant.network.netConfigure;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.leefeng.lfrecyclerview.LFRecyclerView;
 import me.leefeng.lfrecyclerview.OnItemClickListener;
+import rx.Subscription;
+import rx.functions.Action1;
 
 import static com.workerassistant.R.id.third_page_rv_list;
 
@@ -45,16 +63,144 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.third_page_main, container, false);
-        initBase();
 //        lay_fresh = (SwipeRefreshLayout) rootView.findViewById(R.id.nearpage_refresh);
 //        lay_fresh.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 //        lay_fresh.setOnRefreshListener(this);
-//        initBase();
-
+        initBase();
+        initList();
+        initPopUpWindow();
         return rootView;
     }
-    private void initBase() {
+    private PopupWindow popupWindow;
+    private View darkView;
+    private Button btnSubmit,btnReset;
+    private Animation animIn, animOut;
+    private EditText etName,etPhone,etLevel;
+    private TextView tvCity,tvWorkType;
+    private EditText etAge;
 
+    private void initPopUpWindow(){
+        darkView = rootView.findViewById(R.id.third_page_darkview);
+        animIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in_anim);
+        animOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_anim);
+        rootView.findViewById(R.id.topbar_page_3_popup_new_person_info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindowClick();
+            }
+        });
+        popupWindow = new PopupWindow(getActivity());
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.third_page_popup, null);
+        /*  init 弹出窗口 */
+        popupWindow.setContentView(view);
+        popupWindow.setBackgroundDrawable(new PaintDrawable(Color.WHITE));
+        popupWindow.setFocusable(true);
+        popupWindow.setHeight(ScreenUtils.getScreenH(getActivity()) * 3  / 5);
+        popupWindow.setWidth(ScreenUtils.getScreenW(getActivity()));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                darkView.startAnimation(animOut);
+                darkView.setVisibility(View.GONE);
+            }
+        });
+        /* init 弹出窗口（选课界面）的控件  */
+        etName = (EditText)view.findViewById(R.id.third_popup_name);
+        etPhone = (EditText)view.findViewById(R.id.third_popup_phone);
+        etAge =(EditText)view.findViewById(R.id.third_popup_age);
+        etLevel = (EditText)view.findViewById(R.id.third_popup_level);
+        tvCity = (TextView)view.findViewById(R.id.third_popup_city);
+        tvCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), CityPickActivity.class));
+            }
+        });
+        Subscription mSubscriptionCity = RxBus.getDefault().toObserverable(CityBean.class)
+                .subscribe(new Action1<CityBean>() {
+                    @Override
+                    public void call(CityBean cityBean) {
+                        tvCity.setText(cityBean.getCity());
+                    }
+                });
+        tvWorkType = (TextView)view.findViewById(R.id.third_popup_work_type);
+        tvWorkType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), WorkTypeActivity.class));
+            }
+        });
+
+//        seccampus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String[] district = getResources().getStringArray(R.array.distirct);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+        btnSubmit = (Button)view.findViewById(R.id.third_popup_submit);
+        btnReset = (Button)view.findViewById(R.id.third_popoup_reset);
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //清空
+
+            }
+        });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //送出结果
+                PersonBean personBean  = new PersonBean();
+//                personBean.setAge(Integer.parseInt(etAge.getText().toString()));
+                personBean.setAge( etAge.getText().toString() );
+                personBean.setCity(tvCity.getText().toString());
+                personBean.setLevel(etLevel.getText().toString());
+                personBean.setName(etName.getText().toString());
+                personBean.setPhone(etPhone.getText().toString());
+                personBean.setWorkType(tvWorkType.getText().toString());
+                netConfigure net = netConfigure.getInstance();
+                net.insertPerson(personBean);
+                popupWindow.dismiss();
+            }
+        });
+    }
+    private void popupWindowClick()
+    {
+        if (popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        } else {
+            // popupWindow.showAsDropDown(rootView.findViewById(R.id.topbar_page_2_as_drop_down));
+            popupWindow.showAtLocation(rootView.findViewById(R.id.topbar_page_3_as_drop_down), Gravity.BOTTOM,0,0);
+            popupWindow.setAnimationStyle(-1);
+            //背景变暗
+            darkView.startAnimation(animIn);
+            darkView.setVisibility(View.VISIBLE);
+        }
+    }
+    private void initBase() {
+        rootView.findViewById(R.id.topbar_page_3_pick_city).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(v.getContext(), CityPickActivity.class));
+                    }
+                }
+        );
+        rootView.findViewById(R.id.topbar_page_3_pick_work_type).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(v.getContext(), WorkTypeActivity.class));
+                    }
+                }
+        );
+    }
+    private void initList() {
         recycleview = (LFRecyclerView) rootView.findViewById(third_page_rv_list);
         recycleview.setLoadMore(true);
         recycleview.setRefresh(true);

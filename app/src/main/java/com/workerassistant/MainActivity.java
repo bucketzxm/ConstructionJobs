@@ -12,6 +12,7 @@ import com.workerassistant.Page.FourthPage.FourthFragment;
 import com.workerassistant.Page.SecondPage.SecondFragment;
 import com.workerassistant.Page.TextTabFragment;
 import com.workerassistant.Page.ThirdPage.ThirdFragment;
+import com.workerassistant.network.netConfigure;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 //    private TextView toolbarTitle;
@@ -22,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initBaseWidgets();
         initBottomTab();
-
+        netConfigure net = netConfigure.getInstance();
+        net.getAllPersonData();
     }
     private void initBaseWidgets(){
 

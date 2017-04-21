@@ -9,24 +9,29 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.workerassistant.CityPick.CityBean;
 import com.workerassistant.CityPick.CityPickActivity;
 import com.workerassistant.R;
+import com.workerassistant.Util.rxbus.RxBus;
 import com.workerassistant.WorkType.WorkTypeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import rx.Subscription;
+import rx.functions.Action1;
 
 public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnRefreshListener {
     public static FirstFragment newInstance() {
         FirstFragment f = new FirstFragment();
         return f;
     }
-
+    private Subscription mSubscriptionCity;
     private View rootView = null;//缓存Fragment view
 //    private OneRecycleAdapter adapter;
 //    private SwipeRefreshLayout lay_fresh;
@@ -34,7 +39,7 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
 //    private static List<Cloth>newDatashow = new ArrayList<>();
     private ListView manList,workList;
     private ImageView imgBg;
-
+    private TextView tvCity,tvWorkType;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.firstpage_main, container, false);
@@ -54,7 +59,16 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
                 .bitmapTransform(new BlurTransformation(getActivity(), 5))
                 .crossFade()
                 .into(imgBg);
-        rootView.findViewById(R.id.top_bar_pick_city).setOnClickListener(
+        tvCity = (TextView)rootView.findViewById(R.id.topbar_page_1_current_city);
+        mSubscriptionCity = RxBus.getDefault().toObserverable(CityBean.class)
+                .subscribe(new Action1<CityBean>() {
+                    @Override
+                    public void call(CityBean cityBean) {
+
+                        tvCity.setText(cityBean.getCity());
+                    }
+                });
+        rootView.findViewById(R.id.topbar_page_1_pick_city).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -62,7 +76,11 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
                     }
                 }
         );
-        rootView.findViewById(R.id.top_bar_pick_work_type).setOnClickListener(
+        tvWorkType = (TextView)rootView.findViewById(R.id.topbar_page_1_current_work_type);
+
+
+
+        rootView.findViewById(R.id.topbar_page_1_pick_work_type).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

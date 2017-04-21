@@ -3,12 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/topbar_pick_city_work_type"  />
-    <me.leefeng.lfrecyclerview.LFRecyclerView
+    <include layout="@layout/topbar_page_2"  />
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/second_page_rv_list"
-        android:background="@color/md_grey_100"
-        >
-    </me.leefeng.lfrecyclerview.LFRecyclerView>
+        android:layout_height="match_parent">
+        <me.leefeng.lfrecyclerview.LFRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/second_page_rv_list"
+            android:background="@color/md_grey_100"
+            >
+        </me.leefeng.lfrecyclerview.LFRecyclerView>
+        <View
+            android:id="@+id/second_page_darkview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dark_bg"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

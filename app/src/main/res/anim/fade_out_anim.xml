@@ -1,0 +1,19 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="300"
+    android:fillAfter="true">
+
+    <alpha
+        android:fromAlpha="1"
+        android:toAlpha="0" >
+    </alpha>
+    <translate
+        android:fromYDelta="0"
+        android:toYDelta="50%p">
+    </translate>
+    <!--<scale-->
+        <!--android:fromXScale="1"-->
+        <!--android:fromYScale="1"-->
+        <!--android:toXScale="0.9"-->
+        <!--android:toYScale="0.9"-->
+        <!--/>-->
+</set>
