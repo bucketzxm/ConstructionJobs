@@ -30,7 +30,7 @@
             android:layout_height="1dp"
             android:background="@color/md_grey_200"/>
 
-        <GridLayout
+        <LinearLayout
             android:id="@+id/third_popup_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -38,84 +38,60 @@
             android:paddingLeft="24dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:paddingRight="24dp"
-            android:columnCount="1" >
-            <GridLayout
+            android:paddingRight="24dp" >
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:columnCount="4"
-                android:rowCount="1"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
+                android:paddingBottom="16dp">
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="姓名："
-                    />
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="地点："
+                        />
+                    <TextView
+                        android:id="@+id/third_popup_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="12dp"
+                        android:textSize="16sp"
+                        android:text="上海"
+                        android:drawableRight="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
+                        />
+                </LinearLayout>
 
-                <EditText
-                    android:layout_columnWeight="1"
-                    android:id="@+id/third_popup_name"
-                    android:layout_gravity="fill"
-                    android:textSize="14sp"
-                    android:layout_marginRight="24dp"
-                    android:layout_marginLeft="12dp"
-                    android:background="@drawable/editsharp_select"
-                    android:inputType="text"
-                    />
-
-            </GridLayout>
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="地点："
-                    />
-                <TextView
-                    android:id="@+id/third_popup_city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="12dp"
-                    android:textSize="16sp"
-                    android:text="上海"
-                    android:drawableRight="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
-                     />
-            </GridLayout>
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="工种："
-                    />
-                <TextView
-                    android:id="@+id/third_popup_work_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="12dp"
-                    android:textSize="16sp"
-                    android:text="油漆工"
-                    android:drawableRight="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
-                     />
-                <!--<EditText-->
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="工种："
+                        />
+                    <TextView
+                        android:id="@+id/third_popup_work_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="12dp"
+                        android:textSize="16sp"
+                        android:text="油漆工"
+                        android:drawableRight="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
+                        />
+                    <!--<EditText-->
                     <!--android:id="@+id/third_popup_city_work_type"-->
                     <!--android:layout_columnSpan="3"-->
                     <!--android:layout_gravity="fill"-->
@@ -126,9 +102,40 @@
                     <!--android:textSize="14sp"-->
                     <!--android:inputType="textPhonetic"-->
                     <!--/>-->
-            </GridLayout>
+                </LinearLayout>
+            </LinearLayout>
 
-            <GridLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+                <TextView
+                    android:layout_weight="3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="姓名："
+                    />
+                <EditText
+                    android:id="@+id/third_popup_name"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="4dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:background="@drawable/editsharp_select"
+                    android:inputType="text"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -144,16 +151,22 @@
                     />
 
                 <EditText
-                    android:layout_columnWeight="1"
                     android:id="@+id/third_popup_level"
-                    android:layout_gravity="fill"
-                    android:textSize="14sp"
-                    android:layout_marginRight="24dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="4dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:textSize="16sp"
                     android:background="@drawable/editsharp_select"
                     android:inputType="text"
                     />
                 <TextView
+                    android:layout_marginLeft="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -161,17 +174,22 @@
                     />
 
                 <EditText
-                    android:layout_columnWeight="1"
                     android:id="@+id/third_popup_age"
-                    android:layout_gravity="fill"
-                    android:textSize="14sp"
-                    android:layout_marginRight="24dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_weight="3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="4dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
                     android:background="@drawable/editsharp_select"
                     android:inputType="text"
                     />
-            </GridLayout>
-            <GridLayout
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -186,48 +204,63 @@
 
                 <!--android:background="@drawable/editsharp_select"-->
                 <EditText
-                    android:background="@drawable/editsharp_select"
                     android:id="@+id/third_popup_phone"
-                    android:layout_columnSpan="3"
-                    android:layout_gravity="fill"
-                    android:textSize="14sp"
                     android:textColorHint="#a5a5a5"
-                    android:layout_marginRight="10dp"
                     android:inputType="phone"
-                    android:layout_marginLeft="24dp"
+                    android:background="@drawable/editsharp_select"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="4dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
                     />
-            </GridLayout>
-            <GridLayout
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-
                 android:layout_marginTop="16dp"
-                android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
-                <Button
-                    android:id="@+id/third_popoup_reset"
-                    android:layout_width="100dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/btnsharp"
-                    android:layout_columnSpan="1"
-                    android:layout_marginLeft="10dp"
-                    android:text="重置"
-                    android:textSize="14dp"
-                    android:textColor="#ededed"/>
-
-                <Button
-                    android:id="@+id/third_popup_submit"
-                    android:layout_width="100dp"
-                    android:layout_height="36dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@drawable/btnsharp"
-                    android:layout_column="3"
-                    android:text="提交"
-                    android:textSize="14dp"
-                    android:textColor="#ededed"/>
-            </GridLayout>
-        </GridLayout>
+                android:paddingBottom="16dp" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <Button
+                        android:id="@+id/third_popoup_reset"
+                        android:layout_width="100dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/btnsharp"
+                        android:layout_columnSpan="1"
+                        android:layout_marginLeft="10dp"
+                        android:text="重置"
+                        android:textSize="14dp"
+                        android:textColor="#ededed"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <Button
+                        android:id="@+id/third_popup_submit"
+                        android:layout_width="100dp"
+                        android:layout_height="36dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/btnsharp"
+                        android:layout_column="3"
+                        android:text="提交"
+                        android:textSize="14dp"
+                        android:textColor="#ededed"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

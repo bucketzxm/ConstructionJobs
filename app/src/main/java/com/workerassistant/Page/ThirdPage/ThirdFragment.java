@@ -56,10 +56,11 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
 //    private SwipeRefreshLayout lay_fresh;
 //    private static List<Cloth>dataHot = new ArrayList<>();
 //    priv static List<Cloth>newDatashow = new ArrayList<>();
+    private static int PAGE_SIZE = 5;
     private LFRecyclerView recycleview;
     private ThirdPageListAdapter adapter;
     private List<String> datas;
-
+    private int endIndex;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.third_page_main, container, false);
@@ -75,6 +76,20 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     private EditText etName,etPhone,etLevel;
     private TextView tvCity,tvWorkType;
     private EditText etAge;
+    private void initEndIndex(){
+        endIndex = 0;
+    }
+    public int getEndIndex(){
+        return endIndex;
+    }
+
+    public void setEndIndex(int endIndex) {
+        this.endIndex = endIndex;
+    }
+
+    public void nextEndIndex(){
+        this.endIndex += PAGE_SIZE;
+    }
 
     private void initPopUpWindow(){
         darkView = rootView.findViewById(R.id.third_page_darkview);
@@ -227,6 +242,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
 
     @Override
     public void onRefresh() {
+        initEndIndex();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -234,9 +250,9 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
 //                recycleview.stopRefresh(b);
                 recycleview.stopRefresh(true);
                 adapter.addFirstData("onRefresh");
-//                adapter.notifyItemInserted(0);
-//                adapter.notifyItemRangeChanged(0,datas.size());
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemInserted(0);
+                adapter.notifyItemRangeChanged(0,datas.size());
+//                adapter.notifyDataSetChanged();
                 Log.d( "onRefresh: ",adapter.getItemCount()+"");
             }
         }, 2000);
@@ -249,8 +265,8 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
             public void run() {
                 recycleview.stopLoadMore();
                 adapter.addLastData("onLoadMore");
-//                adapter.notifyItemRangeInserted(datas.size()-1,1);
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeInserted(datas.size()-1,1);
+//                adapter.notifyDataSetChanged();
                 Log.d( "onRefresh: ",adapter.getItemCount()+"");
 
             }

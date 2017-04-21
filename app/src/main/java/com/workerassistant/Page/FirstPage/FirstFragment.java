@@ -90,8 +90,6 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
         );
     }
     private void initBase() {
-
-
         List<String> datas = new ArrayList<>();
         for(int i = 0 ;i<18;i++) {
             datas.add("");

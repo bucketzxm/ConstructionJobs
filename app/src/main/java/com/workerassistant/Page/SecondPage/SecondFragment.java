@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +24,22 @@ import com.workerassistant.CustomUI.RecyclerViewDivider;
 import com.workerassistant.R;
 import com.workerassistant.Util.ScreenUtils;
 import com.workerassistant.WorkType.WorkTypeActivity;
+import com.workerassistant.bean.PersonBean;
+import com.workerassistant.network.netConfigure;
+import com.workerassistant.network.netService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.leefeng.lfrecyclerview.LFRecyclerView;
 import me.leefeng.lfrecyclerview.OnItemClickListener;
+import retrofit2.Call;
+import retrofit2.Response;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.workerassistant.R.id.second_page_rv_list;
 
@@ -45,12 +53,12 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         SecondFragment f = new SecondFragment();
         return f;
     }
-
+    private netConfigure net = netConfigure.getInstance();
     private View rootView = null;//缓存Fragment view
     private LFRecyclerView recycleview;
 //    private ListView listView;
     private SecondPageListAdapter adapter;
-    private  List<String> datas;
+    private  List<PersonBean> datas = new ArrayList<PersonBean>();;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +67,6 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         initBase();
         initList();
         initPopUpWindow();
-        onRefresh();
         return rootView;
     }
     private PopupWindow popupWindow;
@@ -69,7 +76,8 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     private EditText etName,etPhone,etNumber;
     private TextView tvCity,tvWorkType;
     private EditText etStartTime,etEndTime;
-
+    private int endIndex;
+    private static int PAGE_SIZE = 5;
     private void initPopUpWindow(){
         darkView = rootView.findViewById(R.id.second_page_darkview);
         animIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in_anim);
@@ -170,14 +178,31 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         recycleview.setScrollChangeListener(this);
         recycleview.setItemAnimator(new DefaultItemAnimator());
         recycleview.addItemDecoration(new RecyclerViewDivider(getActivity(), LinearLayoutManager.VERTICAL,2, Color.GRAY));
-        datas = new ArrayList<String>();
-
+//        datas.addAll(initData());
+        onRefresh();
         adapter = new SecondPageListAdapter(datas);
         recycleview.setAdapter(adapter);
-
-
+        endIndex = 0;
+    }
+    private List<PersonBean> initData(){
+        List<PersonBean>beanList = new ArrayList<>();
+        return beanList;
 
     }
+    private void initEndIndex(){
+        endIndex = 0;
+    }
+    public void setEndIndex(int endIndex) {
+        this.endIndex = endIndex;
+    }
+
+    public int getEndIndex() {
+        return endIndex;
+    }
+    public void nextIndex(){
+        this.endIndex += PAGE_SIZE;
+    }
+
     @Override
     public void onClick(int position) {
         Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
@@ -187,36 +212,104 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     public void onLongClick(int po) {
         Toast.makeText(getActivity(), "Long:" + po, Toast.LENGTH_SHORT).show();
     }
-
     @Override
     public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
+//         每次页还原
+        initEndIndex();
+//        Observable observable = net.getObservableAllPersonData();
+        netService.PersonService personService = net.getPersonService();
+        final Call<List<PersonBean>> callIndexPerson =
+                personService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
+        Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
-            public void run() {
-//                b = !b;
-//                recycleview.stopRefresh(b);
-                recycleview.stopRefresh(true);
-                adapter.addFirstData("onRefresh");
-//                adapter.notifyItemInserted(0);
-//                adapter.notifyItemRangeChanged(0,datas.size());
-                adapter.notifyDataSetChanged();
-                Log.d( "onRefresh: ",adapter.getItemCount()+"");
+            public void call(Subscriber<? super List<PersonBean>> subscriber) {
+                Response<List<PersonBean>> beanResponse = null;
+                try {
+                    beanResponse = callIndexPerson.execute();
+                    subscriber.onNext(beanResponse.body());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                subscriber.onCompleted();
             }
-        }, 2000);
+            // 指定 subscribe() 发生在 IO 线程
+            // 指定 Subscriber 的回调发生在主线程
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<PersonBean>>() {
+                    @Override
+                    public void onCompleted() {
+                        recycleview.stopRefresh(true);
+                        //更新页endIndex
+                        nextIndex();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        recycleview.stopRefresh(false);
+                    }
+
+                    @Override
+                    public void onNext(List<PersonBean> beanList) {
+                        adapter.ClearaddDataList(beanList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+////                recycleview.stopRefresh(b);
+//                recycleview.stopRefresh(true);
+//                adapter.addFirstData(new PersonBean());
+////                adapter.notifyItemInserted(0);
+////                adapter.notifyItemRangeChanged(0,datas.size());
+//                adapter.notifyDataSetChanged();
+//                Log.d( "onRefresh: ",adapter.getItemCount()+"");
+
     }
 
     @Override
     public void onLoadMore() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recycleview.stopLoadMore();
-                adapter.addLastData("onLoadMore");
-//                adapter.notifyItemRangeInserted(datas.size()-1,1);
-                adapter.notifyDataSetChanged();
-                Log.d( "onRefresh: ",adapter.getItemCount()+"");
-            }
-        }, 2000);
+            netService.PersonService personService = net.getPersonService();
+            final Call<List<PersonBean>> callIndexPerson =
+                    personService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
+            Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
+                @Override
+                public void call(Subscriber<? super List<PersonBean>> subscriber) {
+                    Response<List<PersonBean>> beanResponse = null;
+                    try {
+                        beanResponse = callIndexPerson.execute();
+                        subscriber.onNext(beanResponse.body());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    subscriber.onCompleted();
+                }
+                // 指定 subscribe() 发生在 IO 线程
+                // 指定 Subscriber 的回调发生在主线程
+            }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<PersonBean>>() {
+                    @Override
+                    public void onCompleted() {
+                        recycleview.stopLoadMore();
+                        //更新页endIndex
+                        nextIndex();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        recycleview.stopLoadMore();
+                    }
+
+                    @Override
+                    public void onNext(List<PersonBean> beanList) {
+                        adapter.addDataList(beanList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+//                recycleview.stopLoadMore();
+//                adapter.addLastData(new PersonBean());
+////                adapter.notifyItemRangeInserted(datas.size()-1,1);
+//                adapter.notifyDataSetChanged();
+//                Log.d( "onRefresh: ",adapter.getItemCount()+"");
     }
     @Override
     public void onRecyclerViewScrollChange(View view, int i, int i1) {

@@ -22,9 +22,12 @@ public class netService {
 //    Url = "http://host:port/apath"
 
      public interface PersonService{
-        @GET("person")
-        Call<List<PersonBean>> getPerson(
-        );
+        @GET("person/")
+        Call<List<PersonBean>> getPerson();
+
+         @GET("person/")
+         Call<List<PersonBean>> getIndexPerson(
+                 @Query("start")int start,@Query("end")int end);
 
 //        @FormUrlEncoded
 //        @POST("person")
