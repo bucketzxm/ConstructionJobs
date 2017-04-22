@@ -5,39 +5,77 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="com.workerassistant.CityPick.CityPickActivity">
     <include layout="@layout/toolbar_back_title" />
-    <FrameLayout
-        android:id="@+id/activity_city_pick"
+    <android.support.v7.widget.SearchView
+        android:id="@+id/activity_city_searchview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv"
+        android:layout_height="42dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:background="#f3f3f3"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:textColor="#757575"
+        app:iconifiedByDefault="false"
+        app:queryBackground="@null"
+        app:queryHint="请输入关键字"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+        <FrameLayout
+            android:id="@+id/activity_city_pick"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white">
+            android:layout_height="match_parent" >
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
 
-        </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>
 
-        <com.workerassistant.CustomUI.IndexBar.widget.IndexBar
-            android:id="@+id/indexBar"
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            app:indexBarPressBackground="@color/partTranslucent"
-            app:indexBarTextSize="16sp"/>
+            <com.workerassistant.CustomUI.IndexBar.widget.IndexBar
+                android:id="@+id/indexBar"
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                app:indexBarPressBackground="@color/partTranslucent"
+                app:indexBarTextSize="16sp"/>
+            <TextView
+                android:id="@+id/tvSideBarHint"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_side_bar_bg"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="48sp"
+                android:visibility="gone"
+                tools:text="A"
+                tools:visibility="visible"/>
+            <fragment
+                android:id="@+id/activity_city_search_fragment"
+                class="com.workerassistant.CityPick.SearchCityFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-        <TextView
-            android:id="@+id/tvSideBarHint"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:background="@drawable/shape_side_bar_bg"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="48sp"
-            android:visibility="gone"
-            tools:text="A"
-            tools:visibility="visible"/>
-    </FrameLayout>
+            <FrameLayout
+                android:id="@+id/activity_city_progress"
+                android:layout_width="match_parent"
+                android:background="@android:color/white"
+                android:layout_height="match_parent">
+
+                <ProgressBar
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+
 </LinearLayout>

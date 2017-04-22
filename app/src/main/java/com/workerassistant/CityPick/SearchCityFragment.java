@@ -1,5 +1,8 @@
 package com.workerassistant.CityPick;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +17,10 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.workerassistant.MainActivity;
 import com.workerassistant.R;
-import com.workerassistant.WorkType.bean.WorkTypeBean;
+import com.workerassistant.Util.Constant;
+import com.workerassistant.Util.rxbus.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +32,10 @@ public class SearchCityFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TextView mTvNoResult;
     private SearchAdapter mAdapter;
-    private List<WorkTypeBean> mDatas;
+    private List<CityBean> mDatas;
 
     private String mQueryText;
+
 
     @Nullable
     @Override
@@ -40,7 +46,7 @@ public class SearchCityFragment extends Fragment {
         return view;
     }
 
-    public void bindDatas(List<WorkTypeBean> datas) {
+    public void bindDatas(List<CityBean> datas) {
         this.mDatas = datas;
         mAdapter = new SearchAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -63,8 +69,8 @@ public class SearchCityFragment extends Fragment {
     }
 
     private class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.VH> implements Filterable {
-        private List<WorkTypeBean> items = new ArrayList<>();
-
+        private List<CityBean> items = new ArrayList<>();
+        private Context context;
         public SearchAdapter() {
             items.clear();
             items.addAll(mDatas);
@@ -72,14 +78,8 @@ public class SearchCityFragment extends Fragment {
 
         @Override
         public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-            final VH holder = new VH(LayoutInflater.from(getActivity()).inflate(R.layout.item_black_border, parent, false));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = holder.getAdapterPosition();
-                    Toast.makeText(getActivity(), "选择了" + items.get(position).getWorkTypeName(),Toast.LENGTH_SHORT);
-                }
-            });
+            final VH holder = new VH(LayoutInflater.from(getActivity()).inflate(R.layout.item_city, parent, false));
+
             return holder;
         }
 
@@ -89,8 +89,29 @@ public class SearchCityFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(VH holder, int position) {
-            holder.tvName.setText(items.get(position).getWorkTypeName());
+        public void onBindViewHolder(VH holder, final int position) {
+            holder.tvName.setText(items.get(position).getCity());
+            holder.tvName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "" + items.get(position).getCity(),Toast.LENGTH_SHORT).show();
+                    CityBean city = new CityBean();
+                    city.setCity(mDatas.get(position).getCity());
+
+                    Activity mainActivity = (Activity)getActivity();
+                    RxBus.getDefault().post(city);
+//                另外一种方法返回值
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("City",city.getCity());
+                    intent.putExtras(bundle);
+                    intent.setClass(mainActivity, MainActivity.class);
+                    mainActivity.setResult(Constant.requestThirdTopCity,intent);
+
+                    mainActivity.finish();
+
+                }
+            });
         }
 
         @Override
@@ -98,9 +119,9 @@ public class SearchCityFragment extends Fragment {
             return new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
-                    ArrayList<WorkTypeBean> list = new ArrayList<>();
-                    for (WorkTypeBean item : mDatas) {
-                        if ( item.getWorkTypeName().contains(constraint)) {//item.getWorkTypeName().startsWith(constraint.toString()) ||
+                    ArrayList<CityBean> list = new ArrayList<>();
+                    for (CityBean item : mDatas) {
+                        if ( item.getCity().contains(constraint)) {//item.getWorkTypeName().startsWith(constraint.toString()) ||
                             list.add(item);
                         }
                     }
@@ -113,7 +134,7 @@ public class SearchCityFragment extends Fragment {
                 @Override
                 @SuppressWarnings("unchecked")
                 protected void publishResults(CharSequence constraint, FilterResults results) {
-                    ArrayList<WorkTypeBean> list = (ArrayList<WorkTypeBean>) results.values;
+                    ArrayList<CityBean> list = (ArrayList<CityBean>) results.values;
                     items.clear();
                     items.addAll(list);
                     if (results.count == 0) {
@@ -131,7 +152,7 @@ public class SearchCityFragment extends Fragment {
 
             public VH(View itemView) {
                 super(itemView);
-                tvName = (TextView) itemView.findViewById(R.id.work_type_tv_item);
+                tvName = (TextView) itemView.findViewById(R.id.tvCity);
             }
         }
     }

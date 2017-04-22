@@ -1,5 +1,7 @@
 package com.workerassistant.WorkType;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.workerassistant.R;
+import com.workerassistant.Util.Constant;
+import com.workerassistant.Util.rxbus.RxBus;
 import com.workerassistant.WorkType.bean.WorkTypeBean;
 
 import java.util.ArrayList;
@@ -73,11 +77,28 @@ public class SearchWorkTypeFragment extends Fragment {
         @Override
         public VH onCreateViewHolder(ViewGroup parent, int viewType) {
             final VH holder = new VH(LayoutInflater.from(getActivity()).inflate(R.layout.item_search_item, parent, false));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.tvName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = holder.getAdapterPosition();
-                    Toast.makeText(getActivity(), "选择了" + items.get(position).getWorkTypeName(),Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), "选择了" + items.get(position).getWorkTypeName(),Toast.LENGTH_SHORT).show();
+                    TextView tv = (TextView)v;
+
+//        返回选中值
+                    WorkTypeBean workTypeBean = new WorkTypeBean();
+                    workTypeBean.setWorkTypeName(tv.getText().toString());
+                    RxBus.getDefault().post(workTypeBean);
+
+//        设置OnActivityResult返回值
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("WorkType",workTypeBean.getWorkTypeName());
+                    intent.putExtras(bundle);
+
+                    Activity mainActivity = (Activity)getActivity();
+                    mainActivity.setResult(Constant.requestThirdTopCity,intent);
+                    mainActivity.finish();
+
                 }
             });
             return holder;

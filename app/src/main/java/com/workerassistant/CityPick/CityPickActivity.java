@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +18,11 @@ import com.workerassistant.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/*  manifest添加此句使得软键盘不上移
+*    <activity android:name=".CityPick.CityPickActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+* */
 
 public class CityPickActivity extends AppCompatActivity {
     private static final String TAG = "zxt";
@@ -38,13 +45,19 @@ public class CityPickActivity extends AppCompatActivity {
     private TextView mTvSideBarHint;
     private TextView title;
     private ImageView back;
-
-
+    private SearchView mSearchView;
+    private FrameLayout mProgressBar;
+    private SearchCityFragment mSearchFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_pick);
         initTopbar("选择城市");
+        initList();
+        initSearch();
+
+    }
+    private void initList(){
         mRv = (RecyclerView) findViewById(R.id.rv);
         mRv.setLayoutManager(mManager = new LinearLayoutManager(this));
 
@@ -52,24 +65,25 @@ public class CityPickActivity extends AppCompatActivity {
         mHeaderAdapter = new HeaderRecyclerAndFooterWrapperAdapter(mAdapter) {
             @Override
             protected void onBindHeaderHolder(ViewHolder holder, int headerPos, int layoutId, Object o) {
-                if( layoutId == R.layout.search_view){
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                           // startActivity(new Intent(v.getContext(), CityPickActivity.class));
-                        }
-                    });
-                    return;
-                }
-                holder.setText(R.id.tvCity, (String) o);
+//            头部最热待添加
+//                if( layoutId == R.layout.search_view){
+//                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            // startActivity(new Intent(v.getContext(), CityPickActivity.class));
+//                        }
+//                    });
+//                    return;
+//                }
+//                holder.setText(R.id.tvCity, (String) o);
             }
         };
 //        mHeaderAdapter.setHeaderView(0,R.layout.item_city, "头部");
-        mHeaderAdapter.setHeaderView(0,R.layout.search_view, "搜索框");
+//        mHeaderAdapter.setHeaderView(0,R.layout.search_view, "搜索框");
         mRv.setAdapter(mHeaderAdapter);
         mRv.addItemDecoration(mDecoration = new SuspensionDecoration(this, mDatas).setHeaderViewCount(mHeaderAdapter.getHeaderViewCount()));
 
-        //如果add两个，那么按照先后顺序，依次渲染。
+        //如果add两个，按照先后顺序，依次渲染
         mRv.addItemDecoration(new DividerItemDecoration(CityPickActivity.this, DividerItemDecoration.VERTICAL));
 
         //使用indexBar
@@ -82,7 +96,42 @@ public class CityPickActivity extends AppCompatActivity {
 
         initDatas(getResources().getStringArray(R.array.provinces));
     }
+    private void initSearch() {
+        mProgressBar = (FrameLayout) findViewById(R.id.activity_city_progress);
+        mSearchView = (SearchView)findViewById(R.id.activity_city_searchview);
+        mSearchFragment = (SearchCityFragment) getSupportFragmentManager().findFragmentById(R.id.activity_city_search_fragment);
+        title.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSearchFragment.bindDatas(mDatas);
+                mProgressBar.setVisibility(View.GONE);
+            }
+        },200);
+        getSupportFragmentManager().beginTransaction().hide(mSearchFragment).commit();
 
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.trim().length() > 0) {
+                    if (mSearchFragment.isHidden()) {
+                        getSupportFragmentManager().beginTransaction().show(mSearchFragment).commit();
+                    }
+                } else {
+                    if (!mSearchFragment.isHidden()) {
+                        getSupportFragmentManager().beginTransaction().hide(mSearchFragment).commit();
+                    }
+                }
+
+                mSearchFragment.bindQueryText(newText);
+                return false;
+            }
+        });
+    }
     /**
      * 组织数据源
      *
@@ -120,8 +169,7 @@ public class CityPickActivity extends AppCompatActivity {
      */
     public void updateDatas(View view) {
         for (int i = 0; i < 5; i++) {
-            mDatas.add(new CityBean("东京"));
-            mDatas.add(new CityBean("大阪"));
+            mDatas.add(new CityBean("新城"));
         }
         mIndexBar.setmSourceDatas(mDatas)
                 .invalidate();

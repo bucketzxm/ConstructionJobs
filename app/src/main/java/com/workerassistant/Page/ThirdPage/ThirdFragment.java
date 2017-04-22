@@ -297,6 +297,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     beanResponse = callIndexProject.execute();
                     subscriber.onNext(beanResponse.body());
                 }catch (Exception e){
+                    Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 subscriber.onCompleted();
@@ -343,6 +344,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     beanResponse = callIndexProject.execute();
                     subscriber.onNext(beanResponse.body());
                 }catch (Exception e){
+                    Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 subscriber.onCompleted();

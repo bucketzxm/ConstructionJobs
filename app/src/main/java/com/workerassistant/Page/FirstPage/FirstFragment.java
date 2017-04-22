@@ -161,6 +161,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     beanResponse = callIndexProject.execute();
                     subscriber.onNext(beanResponse.body());
                 }catch (Exception e){
+                    Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 subscriber.onCompleted();
@@ -176,7 +177,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void onError(Throwable e) {
                 lay_fresh.setRefreshing(false);
-                Toast.makeText(getActivity(),"Error：服务器连接失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNext(List<ProjectBean> beanList) {

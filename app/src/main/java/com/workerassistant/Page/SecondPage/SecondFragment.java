@@ -351,6 +351,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     beanResponse = callIndexPerson.execute();
                     subscriber.onNext(beanResponse.body());
                 }catch (Exception e){
+                    Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 subscriber.onCompleted();

@@ -119,8 +119,8 @@ public class WorkTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void bindType2(HolderTypeText holder, int position){
-        String img = "http://pica.nipic.com/2007-10-09/200710994020530_2.jpg";
         holder.item_txt.setText(mDatas.get(position).getWorkTypeName());
+//        这个只是 "热门"  "其他工种"等标题名
     }
 
 

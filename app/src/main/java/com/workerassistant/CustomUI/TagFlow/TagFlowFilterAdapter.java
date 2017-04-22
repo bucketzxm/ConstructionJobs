@@ -144,14 +144,7 @@ public class TagFlowFilterAdapter extends BaseAdapter implements View.OnClickLis
         Activity mainActivity = (Activity)context;
         mainActivity.setResult(Constant.requestThirdTopCity,intent);
         mainActivity.finish();
-//        else
-//        {
-//            v.setTag(R.id.tag_selected_int,0);
-//            tv.setTextColor(context.getResources().getColor(R.color.flow_txt_off));
-//            tv.setBackgroundResource(R.drawable.tab_shape_tab_filter_text_touch_off);
-//        }
 
-//        Log.d("tag",v.getTag(R.id.tag_selected_int)+"");
     }
 
     private class ViewHolder {

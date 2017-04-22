@@ -17,7 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CityPick.CityPickActivity" />
+        <activity android:name=".CityPick.CityPickActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".WorkType.WorkTypeActivity" />
         <activity android:name=".Page.FourthPage.EditSelfInfoActivity"></activity>
     </application>
