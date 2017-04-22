@@ -10,19 +10,19 @@
         android:orientation="horizontal">
         <LinearLayout
             android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center"
             android:id="@+id/topbar_page_3_pick_city">
             <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:textSize="12sp"
                 android:text="城市"
-                android:paddingLeft="3dp"
+                android:paddingLeft="16dp"
                 android:drawableRight="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
                 android:gravity="center|right" />
             <TextView
@@ -35,13 +35,14 @@
                 android:paddingLeft="3dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-
+                android:paddingRight="12dp"
                 android:text="上海市"
                 android:gravity="center|left" />
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
-            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/topbar_page_3_pick_work_type">
@@ -53,8 +54,8 @@
                 android:layout_marginBottom="8dp"
                 />
             <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:paddingLeft="12dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="3dp"
                 android:paddingTop="12dp"
@@ -64,7 +65,7 @@
                 android:text="工种"
                 android:gravity="center|right" />
             <TextView
-                android:id="@+id/topbar_page_3__current_work_type"
+                android:id="@+id/topbar_page_3_current_work_type"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -77,23 +78,17 @@
                 android:gravity="center|left" />
         </LinearLayout>
         <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/topbar_page_3_popup_new_person_info">
-            <View
-                android:layout_width="0.1dp"
-                android:layout_height="match_parent"
-                android:background="#CACACACA"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                />
+            android:id="@+id/topbar_page_3_popup_new_person_info"
+            >
+
             <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="3dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:paddingTop="12dp"
                 android:text="发布个人信息"
                 android:textAlignment="center"

@@ -6,10 +6,10 @@
         android:fromAlpha="0"
         android:toAlpha="1" >
     </alpha>
-    <translate
-        android:fromYDelta="100%p"
-        android:toYDelta="0">
-    </translate>
+    <!--<translate-->
+        <!--android:fromYDelta="100%p"-->
+        <!--android:toYDelta="0">-->
+    <!--</translate>-->
     <!--<scale-->
         <!--android:fromXScale="0.9"-->
         <!--android:fromYScale="0.9"-->

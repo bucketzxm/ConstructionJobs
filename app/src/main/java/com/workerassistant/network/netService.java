@@ -1,6 +1,7 @@
 package com.workerassistant.network;
 
 import com.workerassistant.bean.PersonBean;
+import com.workerassistant.bean.ProjectBean;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class netService {
 //    path = "/apath"，baseUrl = "http://host:port/a/b"
 //    Url = "http://host:port/apath"
 
-     public interface PersonService{
+     public interface ApiService {
         @GET("person/")
         Call<List<PersonBean>> getPerson();
 
@@ -29,30 +30,27 @@ public class netService {
          Call<List<PersonBean>> getIndexPerson(
                  @Query("start")int start,@Query("end")int end);
 
-//        @FormUrlEncoded
-//        @POST("person")
-//        Call<String> insertPerson(@Field("name") String name,
-//                                  @Field("phone") String phone,
-//                                   @Field("age") String age,
-//                                  @Field("level") String level,
-//                                  @Field("city") String city,
-//                                  @Field("workType") String workType
-//        );
-//    @Headers({"Content-Type: application/json; charset=utf-8"})//需要添加头
-    @POST("person/")
-    Call<PersonBean> insertOnePerson(@Body PersonBean route);//传入的参数为RequestBody
+         @GET("project/")
+         Call<List<ProjectBean>> getIndexProject(
+                 @Query("start")int start,@Query("end")int end);
+
+        @POST("person/")
+        Call<PersonBean> insertOnePerson(@Body PersonBean route);//传入的参数为RequestBody
+
+         @POST("project/")
+        Call<ProjectBean> insertOneProject(@Body ProjectBean projectBean);//传入的参数为RequestBody
 
 
-//    @Headers({"Content-Type: application/json; charset=utf-8"})//需要添加头
-    @POST("person")
-         Call<PersonBean> insertPerson(@Body RequestBody route);//传入的参数为RequestBody
+    //    @Headers({"Content-Type: application/json; charset=utf-8"})//需要添加头
+        @POST("person")
+             Call<PersonBean> insertPerson(@Body RequestBody route);//传入的参数为RequestBody
     }
 
 
 
-    public interface RequestServes {
-        @POST("mobileLogin/submit.html")
-        Call<String> getString(@Query("loginname") String loginname,
-                               @Query("nloginpwd") String nloginpwd);
-    }
+//    public interface RequestServes {
+//        @POST("mobileLogin/submit.html")
+//        Call<String> getString(@Query("loginname") String loginname,
+//                               @Query("nloginpwd") String nloginpwd);
+//    }
 }

@@ -9,18 +9,16 @@ import android.widget.TextView;
 import com.workerassistant.R;
 import com.workerassistant.bean.PersonBean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class SecondPageListAdapter extends RecyclerView.Adapter<SecondPageListAdapter.MasonryView> {
 
-    private List<PersonBean> datas = new ArrayList<>();
+    private List<PersonBean> datas;
 
     public SecondPageListAdapter(List<PersonBean> list) {
-
-        this.datas =list;
+        this.datas=list;
     }
 
     @Override

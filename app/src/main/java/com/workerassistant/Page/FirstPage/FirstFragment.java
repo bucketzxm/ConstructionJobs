@@ -13,10 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.workerassistant.CityPick.CityBean;
 import com.workerassistant.CityPick.CityPickActivity;
 import com.workerassistant.R;
-import com.workerassistant.Util.rxbus.RxBus;
+import com.workerassistant.Util.Constant;
 import com.workerassistant.WorkType.WorkTypeActivity;
 
 import java.util.ArrayList;
@@ -24,19 +23,14 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import rx.Subscription;
-import rx.functions.Action1;
 
 public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnRefreshListener {
     public static FirstFragment newInstance() {
         FirstFragment f = new FirstFragment();
         return f;
     }
-    private Subscription mSubscriptionCity;
+    private Subscription mSubscriptionCity,mSubscriptionWorkType;
     private View rootView = null;//缓存Fragment view
-//    private OneRecycleAdapter adapter;
-//    private SwipeRefreshLayout lay_fresh;
-//    private static List<Cloth>dataHot = new ArrayList<>();
-//    private static List<Cloth>newDatashow = new ArrayList<>();
     private ListView manList,workList;
     private ImageView imgBg;
     private TextView tvCity,tvWorkType;
@@ -60,31 +54,22 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
                 .crossFade()
                 .into(imgBg);
         tvCity = (TextView)rootView.findViewById(R.id.topbar_page_1_current_city);
-        mSubscriptionCity = RxBus.getDefault().toObserverable(CityBean.class)
-                .subscribe(new Action1<CityBean>() {
-                    @Override
-                    public void call(CityBean cityBean) {
-
-                        tvCity.setText(cityBean.getCity());
-                    }
-                });
         rootView.findViewById(R.id.topbar_page_1_pick_city).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(v.getContext(), CityPickActivity.class));
+                        startActivityForResult(new Intent(v.getContext(), CityPickActivity.class),Constant.requestThirdTopCity);
                     }
                 }
         );
         tvWorkType = (TextView)rootView.findViewById(R.id.topbar_page_1_current_work_type);
 
 
-
         rootView.findViewById(R.id.topbar_page_1_pick_work_type).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(v.getContext(), WorkTypeActivity.class));
+                        startActivityForResult(new Intent(v.getContext(), WorkTypeActivity.class),Constant.requestThirdTopWorkType);
                     }
                 }
         );
@@ -106,8 +91,25 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
                 Toast.makeText(getContext(),""+position,Toast.LENGTH_SHORT);
             }
         });
-
-
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        Bundle bundle = data.getExtras();
+        if (bundle == null) {
+            return;
+        }
+        switch (requestCode) {
+            case Constant.requestThirdTopCity:
+                tvCity.setText(bundle.getString("City", "没有选择"));
+                break;
+            case Constant.requestThirdTopWorkType:
+                tvWorkType.setText(bundle.getString("WorkType", "没有选择"));
+                break;
+        }
     }
 }
 

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.workerassistant.bean.PersonBean;
+import com.workerassistant.bean.ProjectBean;
 
 import java.util.List;
 
@@ -49,14 +50,14 @@ public class netConfigure {
 //                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
-    public netService.PersonService getPersonService(){
-        netService.PersonService personService = retrofit.create(netService.PersonService.class);
-        return personService;
+    public netService.ApiService getPersonService(){
+        netService.ApiService apiService = retrofit.create(netService.ApiService.class);
+        return apiService;
     }
 
     public Observable getObservableAllPersonData(){
-        netService.PersonService personService = retrofit.create(netService.PersonService.class);
-        final Call<List<PersonBean>> callAllPerson = personService.getPerson();
+        netService.ApiService apiService = retrofit.create(netService.ApiService.class);
+        final Call<List<PersonBean>> callAllPerson = apiService.getPerson();
 
         observableAllPersonData = Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
@@ -75,8 +76,8 @@ public class netConfigure {
     }
 
     public void LogGetAllPersonData(){
-        netService.PersonService personService = retrofit.create(netService.PersonService.class);
-        final Call<List<PersonBean>> callAllPerson = personService.getPerson();
+        netService.ApiService apiService = retrofit.create(netService.ApiService.class);
+        final Call<List<PersonBean>> callAllPerson = apiService.getPerson();
 
         callAllPerson.enqueue(new Callback<List<PersonBean>>() {
             @Override
@@ -95,10 +96,33 @@ public class netConfigure {
             }
         });
     }
-
+    public void insertProject(ProjectBean projectBean){
+        netService.ApiService apiService = retrofit.create(netService.ApiService.class);
+        Gson gson = new Gson();
+        Log.d(TAG,gson.toJson(projectBean));
+        Call<ProjectBean> callInsertProject = apiService.insertOneProject(projectBean);
+        callInsertProject.enqueue(new Callback<ProjectBean>() {
+            @Override
+            public void onResponse(Call<ProjectBean> call, Response<ProjectBean> response) {
+                Log.d(TAG,"insertProject:onResponse code:"+response.raw().code() );
+                ProjectBean res = response.body();
+                if(response.isSuccessful()) {
+                    //提醒更新
+                    if (res != null) {
+                        Log.d(TAG, "insertProject:onResponse " + res.toString());
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ProjectBean> call, Throwable t) {
+                Log.d(TAG,"insertProject:onFailure");
+                t.printStackTrace();
+            }
+        });
+    }
 
     public void insertPerson(PersonBean personBean){
-        netService.PersonService personService = retrofit.create(netService.PersonService.class);
+        netService.ApiService apiService = retrofit.create(netService.ApiService.class);
 //        Call<String> callAllPerson =
 //                personService.insertPerson(
 //                        personBean.getName(),
@@ -129,7 +153,7 @@ public class netConfigure {
 //        });
 
 
-        Call<PersonBean> callInsertPerson = personService.insertOnePerson(personBean);
+        Call<PersonBean> callInsertPerson = apiService.insertOnePerson(personBean);
         callInsertPerson.enqueue(new Callback<PersonBean>() {
             @Override
             public void onResponse(Call<PersonBean> call, Response<PersonBean> response) {

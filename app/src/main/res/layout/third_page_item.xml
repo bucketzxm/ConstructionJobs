@@ -9,17 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="24dp"
+
         >
         <TextView
             android:layout_marginLeft="16dp"
             android:id="@+id/third_page_item_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/md_teal_600"
+            android:textColor="@color/md_light_blue_600"
+            android:textSize="16sp"
             android:text="上海"/>
         <TextView
             android:layout_marginLeft="16dp"
-            android:id="@+id/third_page_work_item_type"
+            android:textSize="16sp"
+            android:id="@+id/third_page_item_work_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
@@ -28,19 +34,91 @@
 
             <TextView
                 android:layout_marginLeft="16dp"
-                android:layout_weight="1"
-                android:id="@+id/third_page_number_item_needed"
+                android:id="@+id/third_page_item_number_needed"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10人"/>
             <TextView
-                android:layout_weight="1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:id="@+id/third_page_item_originator_phone"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
+                android:text="人"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+            <TextView
+                android:id="@+id/third_page_item_contact_person"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_phone_green_500_18dp"
+                android:textColor="@color/md_green_500"
+                android:text="杨老板"/>
+            <TextView
+                android:layout_marginTop="2dp"
+                android:id="@+id/third_page_item_contact_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="+8613900001111"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="right">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开始时间"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:drawableLeft="@drawable/ic_access_time_grey_500_18dp"
+                    android:layout_gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="到"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp"
+                >
+                <TextView
+                    android:id="@+id/third_page_item_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1231/34/22"/>
+                <TextView
+                    android:id="@+id/third_page_item_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3243/23/43"/>
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

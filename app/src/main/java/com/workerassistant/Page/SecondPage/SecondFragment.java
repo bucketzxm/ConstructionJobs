@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,12 +21,19 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.workerassistant.CityPick.CityBean;
 import com.workerassistant.CityPick.CityPickActivity;
 import com.workerassistant.CustomUI.RecyclerViewDivider;
+import com.workerassistant.CustomUI.TimePick.ChooseTimeDialog;
 import com.workerassistant.R;
+import com.workerassistant.Util.Constant;
 import com.workerassistant.Util.ScreenUtils;
+import com.workerassistant.Util.rxbus.ChangeAnswerEvent;
+import com.workerassistant.Util.rxbus.RxBus;
 import com.workerassistant.WorkType.WorkTypeActivity;
+import com.workerassistant.WorkType.bean.WorkTypeBean;
 import com.workerassistant.bean.PersonBean;
+import com.workerassistant.bean.ProjectBean;
 import com.workerassistant.network.netConfigure;
 import com.workerassistant.network.netService;
 
@@ -38,7 +47,9 @@ import retrofit2.Response;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static com.workerassistant.R.id.second_page_rv_list;
@@ -56,10 +67,37 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     private netConfigure net = netConfigure.getInstance();
     private View rootView = null;//缓存Fragment view
     private LFRecyclerView recycleview;
-//    private ListView listView;
     private SecondPageListAdapter adapter;
-    private  List<PersonBean> datas = new ArrayList<PersonBean>();;
+    private  List<PersonBean> datas = new ArrayList<PersonBean>();
 
+    private PopupWindow popupWindow;
+    private Subscription mTimeZoneSubscription;
+//    private Subscription mSubscriptionTopCity,mSubscriptionTopWorkType;
+    private Subscription mSubscriptionOnfresh;
+    private Subscription mSubscriptionCity,mSubscriptionWorkType;
+    private View darkView;
+    private Button btnSubmit,btnReset;
+    private Animation animIn, animOut;
+    private EditText etContactPerson,etPhone,etNumber;
+    private EditText etStartTime,etEndTime;
+    private TextView tvTopCity, tvTopWorkType;
+    private TextView tvCity, tvWorkType;
+    private int endIndex;
+    private static int PAGE_SIZE = 5;
+
+    final public static int HANDLE_TIME_ZONE = 29;
+    public static Handler handlerThirdPage  = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle bundle = null;
+            switch (msg.what) {
+
+
+            }
+
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -69,15 +107,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         initPopUpWindow();
         return rootView;
     }
-    private PopupWindow popupWindow;
-    private View darkView;
-    private Button btnSubmit,btnReset;
-    private Animation animIn, animOut;
-    private EditText etName,etPhone,etNumber;
-    private TextView tvCity,tvWorkType;
-    private EditText etStartTime,etEndTime;
-    private int endIndex;
-    private static int PAGE_SIZE = 5;
+
     private void initPopUpWindow(){
         darkView = rootView.findViewById(R.id.second_page_darkview);
         animIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in_anim);
@@ -104,20 +134,72 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
             }
         });
         /* init 弹出窗口（选课界面）的控件  */
-        
-//        seccampus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String[] district = getResources().getStringArray(R.array.distirct);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
+        etContactPerson = (EditText)view.findViewById(R.id.second_popup_contact_person);
+        etNumber  = (EditText)view.findViewById(R.id.second_popup_number_needed);
+        etPhone  = (EditText)view.findViewById(R.id.second_popup_contact_phone);
+        etStartTime  = (EditText)view.findViewById(R.id.second_popup_start_time);
+        etEndTime = (EditText)view.findViewById(R.id.second_popup_end_time);
+        mTimeZoneSubscription = RxBus.getDefault().toObserverable(ChangeAnswerEvent.class)
+                .subscribe(new Action1<ChangeAnswerEvent>() {
+                    @Override
+                    public void call(ChangeAnswerEvent changeAnswerEvent) {
+                        if(changeAnswerEvent.getTarget()!=null){
+                            if(changeAnswerEvent.getTarget().equals("timeZone")){
+                                String timeZone = changeAnswerEvent.getAnswer();
+                                String[] timeZon = timeZone.split("-");
+                                etStartTime.setText(timeZon[0]);
+                                if(timeZon.length<2)return;
+                                etEndTime.setText(timeZon[1]);
+                            }
+                        }
+                    }
+                });
+        etStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseTimeDialog chooseTimeDialog = new ChooseTimeDialog();
+                chooseTimeDialog.show(getChildFragmentManager(),"ChooseTimeDialog");
+//                chooseTimeDialog.setHandler(handlerThirdPage);
+            }
+        });
+        etEndTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseTimeDialog chooseTimeDialog = new ChooseTimeDialog();
+                chooseTimeDialog.show(getChildFragmentManager(),"ChooseTimeDialog");
+            }
+        });
+
+        tvCity = (TextView) view.findViewById(R.id.second_popup_city);
+        tvCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), CityPickActivity.class));
+            }
+        });
+        mSubscriptionCity = RxBus.getDefault().toObserverable(CityBean.class)
+                .subscribe(new Action1<CityBean>() {
+                    @Override
+                    public void call(CityBean cityBean) {
+                        tvCity.setText(cityBean.getCity());
+                    }
+                });
+        tvWorkType = (TextView) view.findViewById(R.id.second_popup_work_type);
+        tvWorkType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), WorkTypeActivity.class));
+            }
+        });
+        mSubscriptionWorkType = RxBus.getDefault().toObserverable(WorkTypeBean.class)
+                .subscribe(new Action1<WorkTypeBean>() {
+                    @Override
+                    public void call(WorkTypeBean workTypeBean) {
+                        tvWorkType.setText(workTypeBean.getWorkTypeName());
+                    }
+                });
         btnSubmit = (Button)view.findViewById(R.id.second_popup_submit);
-        btnReset = (Button)view.findViewById(R.id.second_popoup_reset);
+        btnReset = (Button)view.findViewById(R.id.second_popup_reset);
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +211,20 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
             @Override
             public void onClick(View v) {
                 //送出结果
-
+                ProjectBean projectBean = new ProjectBean();
+                projectBean.setCity(tvCity.getText().toString());
+                projectBean.setContactName(etContactPerson.getText().toString());
+                projectBean.setContactPhone(etPhone.getText().toString());
+                projectBean.setEndTime(etEndTime.getText().toString());
+                projectBean.setStartTime(etStartTime.getText().toString());
+                projectBean.setNumNeed(etNumber.getText().toString());
+                projectBean.setWorkType(tvWorkType.getText().toString());
+                net.insertProject(projectBean);
+                //送出后刷新另一个页面
+                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
+                changeAnswerEvent.setTarget("thirdFragment");
+                changeAnswerEvent.setAnswer("onFresh");
+                RxBus.getDefault().post(changeAnswerEvent);
                 popupWindow.dismiss();
             }
         });
@@ -148,24 +243,43 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         }
     }
 
-
     private void initBase() {
-        rootView.findViewById(R.id.topbar_page_2_pick_city).setOnClickListener(
+        mSubscriptionOnfresh = RxBus.getDefault().toObserverable(ChangeAnswerEvent.class)
+                .subscribe(new Action1<ChangeAnswerEvent>() {
+                    @Override
+                    public void call(ChangeAnswerEvent changeAnswerEvent) {
+                        String target = changeAnswerEvent.getTarget();
+                        String answer = changeAnswerEvent.getAnswer();
+                        if(target!=null && answer!=null){
+                            if(target.equals("secondFragment")
+                                    && answer.equals("onFresh")){
+                                onRefresh();
+                            }
+                        }
+                    }
+                });
+        tvTopCity = (TextView)rootView.findViewById(R.id.topbar_page_2_current_city);
+
+        tvTopCity.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(v.getContext(), CityPickActivity.class));
+                        startActivityForResult(new Intent(v.getContext(), CityPickActivity.class), Constant.requestThirdTopCity);
                     }
                 }
         );
-        rootView.findViewById(R.id.topbar_page_2_pick_work_type).setOnClickListener(
+
+        tvTopWorkType = (TextView)rootView.findViewById(R.id.topbar_page_2_current_work_type);
+        tvTopWorkType.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(v.getContext(), WorkTypeActivity.class));
+                        startActivityForResult(new Intent(v.getContext(), WorkTypeActivity.class), Constant.requestThirdTopWorkType);
                     }
                 }
         );
+
+
     }
     private void initList() {
         recycleview = (LFRecyclerView) rootView.findViewById(second_page_rv_list);
@@ -213,13 +327,21 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         Toast.makeText(getActivity(), "Long:" + po, Toast.LENGTH_SHORT).show();
     }
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSubscriptionWorkType.unsubscribe();
+        mSubscriptionCity.unsubscribe();
+        mSubscriptionOnfresh.unsubscribe();
+        mTimeZoneSubscription.unsubscribe();
+    }
+    @Override
     public void onRefresh() {
 //         每次页还原
         initEndIndex();
 //        Observable observable = net.getObservableAllPersonData();
-        netService.PersonService personService = net.getPersonService();
+        netService.ApiService apiService = net.getPersonService();
         final Call<List<PersonBean>> callIndexPerson =
-                personService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
+                apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
         Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
             public void call(Subscriber<? super List<PersonBean>> subscriber) {
@@ -247,6 +369,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void onError(Throwable e) {
                         recycleview.stopRefresh(false);
+                        Toast.makeText(getActivity(),"Error：服务器连接失败",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -256,20 +379,17 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     }
                 });
 ////                recycleview.stopRefresh(b);
-//                recycleview.stopRefresh(true);
 //                adapter.addFirstData(new PersonBean());
 ////                adapter.notifyItemInserted(0);
 ////                adapter.notifyItemRangeChanged(0,datas.size());
-//                adapter.notifyDataSetChanged();
-//                Log.d( "onRefresh: ",adapter.getItemCount()+"");
 
     }
 
     @Override
     public void onLoadMore() {
-            netService.PersonService personService = net.getPersonService();
+            netService.ApiService apiService = net.getPersonService();
             final Call<List<PersonBean>> callIndexPerson =
-                    personService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
+                    apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
             Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
                 @Override
                 public void call(Subscriber<? super List<PersonBean>> subscriber) {
@@ -297,6 +417,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void onError(Throwable e) {
                         recycleview.stopLoadMore();
+                        Toast.makeText(getActivity(),"Error：服务器连接失败",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -309,7 +430,27 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
 //                adapter.addLastData(new PersonBean());
 ////                adapter.notifyItemRangeInserted(datas.size()-1,1);
 //                adapter.notifyDataSetChanged();
-//                Log.d( "onRefresh: ",adapter.getItemCount()+"");
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        Bundle bundle = data.getExtras();
+        if (bundle == null) {
+            return;
+        }
+        switch (requestCode) {
+            case Constant.requestThirdTopCity:
+                tvTopCity.setText(bundle.getString("City", "没有选择"));
+                break;
+            case Constant.requestThirdTopWorkType:
+                tvTopWorkType.setText(bundle.getString("WorkType", "没有选择"));
+                break;
+        }
     }
     @Override
     public void onRecyclerViewScrollChange(View view, int i, int i1) {
@@ -317,21 +458,22 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     }
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(hidden){
-            //when visible to user
-        }else{
-            //when inVisible to user
-
-        }
-    }
 }
 
 
+//        mSubscriptionTopWorkType = RxBus.getDefault().toObserverable(WorkTypeBean.class)
+//                .subscribe(new Action1<WorkTypeBean>() {
+//                    @Override
+//                    public void call(WorkTypeBean workTypeBean) {
+//                        tvTopWorkType.setText(workTypeBean.getWorkTypeName());
+//                    }
+//                });
+
+//        mSubscriptionTopCity = RxBus.getDefault().toObserverable(CityBean.class)
+//                .subscribe(new Action1<CityBean>() {
+//                    @Override
+//                    public void call(CityBean cityBean) {
+//
+//                        tvTopCity.setText(cityBean.getCity());
+//                    }
+//                });

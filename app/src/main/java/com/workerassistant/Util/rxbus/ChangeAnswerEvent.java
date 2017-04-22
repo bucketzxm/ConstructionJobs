@@ -6,13 +6,22 @@ package com.workerassistant.Util.rxbus;
  * @author ice
  */
 public class ChangeAnswerEvent {
-    private String mAnswer;
+    private String answer;
+    private String target;
 
     public String getAnswer() {
-        return mAnswer;
+        return answer;
     }
 
-    public void setAnswer(String answer) {
-        mAnswer = answer;
+    public void setAnswer(String mAnswer) {
+        this.answer = mAnswer;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public String getTarget() {
+        return target;
     }
 }

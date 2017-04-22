@@ -3,7 +3,9 @@ package com.workerassistant.CustomUI.TagFlow;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.workerassistant.R;
+import com.workerassistant.Util.Constant;
+import com.workerassistant.Util.rxbus.RxBus;
+import com.workerassistant.WorkType.bean.WorkTypeBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +130,19 @@ public class TagFlowFilterAdapter extends BaseAdapter implements View.OnClickLis
 
         }
         Toast.makeText(context, "选择工种：" + tv.getText() , Toast.LENGTH_SHORT).show();
+//        返回选中值
+        WorkTypeBean workTypeBean = new WorkTypeBean();
+        workTypeBean.setWorkTypeName(tv.getText().toString());
+        RxBus.getDefault().post(workTypeBean);
+
+//        设置OnActivityResult返回值
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("WorkType",workTypeBean.getWorkTypeName());
+        intent.putExtras(bundle);
+
         Activity mainActivity = (Activity)context;
+        mainActivity.setResult(Constant.requestThirdTopCity,intent);
         mainActivity.finish();
 //        else
 //        {

@@ -90,7 +90,8 @@
                 android:layout_centerVertical="true"
                 android:text="+8613900003333"
                 android:textSize="18sp"
-                android:textColor="@color/md_teal_600"
+                android:drawableLeft="@drawable/ic_phone_green_500_18dp"
+                android:textColor="@color/md_green_500"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/second_page_item_phone"/>
