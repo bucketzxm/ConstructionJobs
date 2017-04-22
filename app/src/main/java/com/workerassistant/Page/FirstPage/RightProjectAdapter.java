@@ -8,14 +8,19 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.workerassistant.R;
+import com.workerassistant.bean.ProjectBean;
 
 import java.util.List;
 
-public class LeftManListAdapter extends BaseAdapter {
-    private Context context;
-    private List<String> list;
+/**
+ * Created by eva on 2017/4/22.
+ */
 
-    public LeftManListAdapter(Context context, List<String> list) {
+public class RightProjectAdapter extends BaseAdapter {
+    private Context context;
+    private List<ProjectBean> list;
+
+    public RightProjectAdapter(Context context, List<ProjectBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -39,30 +44,25 @@ public class LeftManListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.hottest_man_item, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.top_project_item, null);
             holder = new ViewHolder();
-//            holder.nameTV = (TextView) convertView.findViewById(R.id.left_item_name);
+            holder.tvCity = (TextView) convertView.findViewById(R.id.top_project_item_city);
+            holder.tvNumber = (TextView) convertView.findViewById(R.id.top_project_item_number_needed);
+            holder.tvWorkType = (TextView) convertView.findViewById(R.id.top_project_item_work_type);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-//
-//        //选中和没选中时，设置不同的颜色
-//        if (position == selectedPosition){
-//            convertView.setBackgroundResource(R.color.popup_right_bg);
-//        }else{
-//            convertView.setBackgroundResource(R.drawable.tab_shape_filter_white_button_text_color);
-//        }
-
-//        if (list.get(position).getSecondList() != null && list.get(position).getSecondList().size() > 0) {
-//            holder.nameTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_right_black_18dp, 0);
-//        } else {
-//            holder.nameTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//        }
-
+        holder.tvNumber.setText(list.get(position).getNumNeed());
+        holder.tvCity.setText(list.get(position).getCity());
+        holder.tvWorkType.setText(list.get(position).getWorkType());
         return convertView;
     }
-
+    public void clearAddDataList(List<ProjectBean> beanList){
+        list.clear();
+        list.addAll(beanList);
+    }
     private int selectedPosition = 0;
 
     public void setSelectedPosition(int selectedPosition) {
@@ -74,6 +74,7 @@ public class LeftManListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        TextView nameTV;
+        TextView tvNumber,tvWorkType,tvCity;
     }
+
 }

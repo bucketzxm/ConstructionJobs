@@ -248,14 +248,15 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                 .subscribe(new Action1<ChangeAnswerEvent>() {
                     @Override
                     public void call(ChangeAnswerEvent changeAnswerEvent) {
-                        String target = changeAnswerEvent.getTarget();
-                        String answer = changeAnswerEvent.getAnswer();
-                        if(target!=null && answer!=null){
-                            if(target.equals("secondFragment")
-                                    && answer.equals("onFresh")){
-                                onRefresh();
-                            }
-                        }
+                        onRefresh();
+//                        String target = changeAnswerEvent.getTarget();
+//                        String answer = changeAnswerEvent.getAnswer();
+//                        if(target!=null && answer!=null){
+//                            if(target.equals("secondFragment")
+//                                    && answer.equals("onFresh")){
+//                                onRefresh();
+//                            }
+//                        }
                     }
                 });
         tvTopCity = (TextView)rootView.findViewById(R.id.topbar_page_2_current_city);

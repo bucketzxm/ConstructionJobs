@@ -93,33 +93,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        resetTabState();//reset the tab state
         switch (view.getId()) {
             case R.id.tv_home:
-                setTabState(mTHome, R.drawable.ic_home_black_24dp, getMyColor(R.color.color1));
-                switchFrgment(0);
+                jumpToFragment(1);
                 break;
             case R.id.tv_second:
-                setTabState(mSecond, R.drawable.ic_face_black_24dp, getMyColor(R.color.color1));
-                switchFrgment(1);
+                jumpToFragment(2);
                 break;
             case R.id.tv_third:
-                setTabState(mThird, R.drawable.ic_line_style_black_24dp, getMyColor(R.color.color1));
-                switchFrgment(2);
+                jumpToFragment(3);
                 break;
             case R.id.tv_person:
-                setTabState(mTMe, R.drawable.ic_account_box_black_24dp, getMyColor(R.color.color1));
-                switchFrgment(3);
+                jumpToFragment(4);
                 break;
 
         }
     }
-
     /**
      * switch the fragment accordting to id
-     * @param i id
+     * @param i id in [0,1,2,3]
      */
-    public void switchFrgment(int i) {
+    public void jumpToFragment(int i){
+        resetTabState();//reset the tab state
+        switch (i){
+            case 1:
+                setTabState(mTHome, R.drawable.ic_home_black_24dp, getMyColor(R.color.color1));
+                break;
+            case 2:
+                setTabState(mSecond, R.drawable.ic_face_black_24dp, getMyColor(R.color.color1));
+                break;
+            case 3:
+                setTabState(mThird, R.drawable.ic_line_style_black_24dp, getMyColor(R.color.color1));
+                break;
+            case 4:
+                setTabState(mTMe, R.drawable.ic_account_box_black_24dp, getMyColor(R.color.color1));
+                break;
+        }
+//        switchFragment中是 0..1..2..3的编号
+        switchFrgment(i-1);
+
+    }
+    private void switchFrgment(int i) {
         if(i>4)return;
         // 只有4个页面
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

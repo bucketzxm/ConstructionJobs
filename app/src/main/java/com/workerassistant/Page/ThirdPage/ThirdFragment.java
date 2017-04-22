@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +66,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     private static int PAGE_SIZE = 5;
     private LFRecyclerView recycleview;
     private ThirdPageListAdapter adapter;
-    private List<ProjectBean> datas  = new ArrayList<ProjectBean>();;
+    private List<ProjectBean> datas  = new ArrayList<ProjectBean>();
     private int endIndex;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -224,16 +223,17 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                 .subscribe(new Action1<ChangeAnswerEvent>() {
                     @Override
                     public void call(ChangeAnswerEvent changeAnswerEvent) {
-                            String target = changeAnswerEvent.getTarget();
-                            String answer = changeAnswerEvent.getAnswer();
-                        Log.d("thirdFragment","mSubscriptionOnfresh:"+target+" "+answer);
-                            if(target!=null && answer!=null){
-                                if(target.equals("thirdFragment")
-                                        && answer.equals("onFresh")){
-
-                                    onRefresh();
-                                }
-                            }
+                        onRefresh();
+//                            String target = changeAnswerEvent.getTarget();
+//                            String answer = changeAnswerEvent.getAnswer();
+//                        Log.d("thirdFragment","mSubscriptionOnfresh:"+target+" "+answer);
+//                            if(target!=null && answer!=null){
+//                                if(target.equals("thirdFragment")
+//                                        && answer.equals("onFresh")){
+//
+//                                    onRefresh();
+//                                }
+//                            }
                     }
                 });
 

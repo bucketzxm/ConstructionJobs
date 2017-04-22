@@ -115,7 +115,7 @@ public class netConfigure {
             }
             @Override
             public void onFailure(Call<ProjectBean> call, Throwable t) {
-                Log.d(TAG,"insertProject:onFailure");
+                Log.d(TAG,"insertProject:onFailure 是因为服务器不会返回相应上传的信息");
                 t.printStackTrace();
             }
         });
@@ -170,7 +170,7 @@ public class netConfigure {
 
             @Override
             public void onFailure(Call<PersonBean> call, Throwable t) {
-                Log.d(TAG,"callAllPerson:onFailure");
+                Log.d(TAG,"callAllPerson:onFailure 是因为服务器不会返回相应上传的信息");
                 t.printStackTrace();
             }
         });
