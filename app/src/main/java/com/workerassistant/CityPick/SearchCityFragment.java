@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -51,6 +52,8 @@ public class SearchCityFragment extends Fragment {
         mAdapter = new SearchAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+//        mRecyclerView.addItemDecoration(new RecyclerViewDivider(getActivity(), LinearLayout.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         if (mQueryText != null) {
             mAdapter.getFilter().filter(mQueryText);
@@ -96,7 +99,7 @@ public class SearchCityFragment extends Fragment {
                 public void onClick(View v) {
                     Toast.makeText(getActivity(), "" + items.get(position).getCity(),Toast.LENGTH_SHORT).show();
                     CityBean city = new CityBean();
-                    city.setCity(mDatas.get(position).getCity());
+                    city.setCity(items.get(position).getCity());
 
                     Activity mainActivity = (Activity)getActivity();
                     RxBus.getDefault().post(city);

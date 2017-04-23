@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:layout_marginLeft="16dp"
@@ -17,13 +17,17 @@
     <!--android:background="?attr/selectableItemBackground"-->
     <TextView
         android:id="@+id/tv_item_search"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:paddingBottom="6dp"
         android:paddingTop="6dp"
         tools:text="文本"
         android:textSize="16sp"/>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/md_grey_500"
+        />
 
 </LinearLayout>

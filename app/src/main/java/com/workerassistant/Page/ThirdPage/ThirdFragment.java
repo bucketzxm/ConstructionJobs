@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static android.content.ContentValues.TAG;
 import static com.workerassistant.R.id.third_page_rv_list;
 
 /**
@@ -281,6 +283,28 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     public void onLongClick(int po) {
         Toast.makeText(getActivity(), "onLongClick" + po, Toast.LENGTH_SHORT).show();
     }
+    private String getSelectCity(){
+        String res = null;
+        if(!tvTopCity.getText().toString().equals("全部")){
+            res = tvTopCity.getText().toString();
+        }
+        return res;
+    }
+    private String getSelectWorkType(){
+        String res = null;
+        if(!tvTopWorkType.getText().toString().equals("全部")){
+            res = tvTopWorkType.getText().toString();
+        }
+        return res;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSubscriptionWorkType.unsubscribe();
+        mSubscriptionCity.unsubscribe();
+        mSubscriptionOnfresh.unsubscribe();
+    }
 
     @Override
     public void onRefresh() {
@@ -288,18 +312,37 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
         initEndIndex();
         netService.ApiService apiService = net.getPersonService();
         final Call<List<ProjectBean>> callIndexProject =
-                apiService.getIndexProject(getEndIndex(),getEndIndex()+PAGE_SIZE);
+                apiService.getIndexProject(getEndIndex(),getEndIndex()+PAGE_SIZE
+                        ,null,null);
         Observable.create(new Observable.OnSubscribe<List<ProjectBean>>() {
             @Override
             public void call(Subscriber<? super List<ProjectBean>> subscriber) {
                 Response<List<ProjectBean>> beanResponse = null;
                 try {
                     beanResponse = callIndexProject.execute();
-                    subscriber.onNext(beanResponse.body());
+
                 }catch (Exception e){
-                    Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Error：网络接口执行出错",Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
+
+//                出现返回为null，Response{protocol=http/1.1, code=500, message=Internal Server Error
+//                此时若可以连接服务器，应该是由于返回的是[] 空数组，即没有对应的数据
+//                并让subscriber正常结束onCompleted
+                if (beanResponse.body() == null) {
+                    Log.d(TAG,"beanResponsebody is null,筛选城市与工种没有相关数据");
+                    subscriber.onCompleted();
+                    return;
+                }
+//                    Log.d(TAG,beanResponse.raw().code()+"");
+//                    Log.d(TAG,beanResponse.raw().toString());
+
+                if (beanResponse.isSuccessful()) {
+                    subscriber.onNext(beanResponse.body());
+                }else{
+                    Log.d(TAG, "Error：服务器返回码为"+beanResponse.raw().code());
+                }
+
                 subscriber.onCompleted();
             }
             // 指定 subscribe() 发生在 IO 线程
@@ -335,7 +378,8 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     public void onLoadMore() {
         netService.ApiService apiService = net.getPersonService();
         final Call<List<ProjectBean>> callIndexProject =
-                apiService.getIndexProject(getEndIndex(),getEndIndex()+PAGE_SIZE);
+                apiService.getIndexProject(getEndIndex(),getEndIndex()+PAGE_SIZE
+                ,null,null);
         Observable.create(new Observable.OnSubscribe<List<ProjectBean>>() {
             @Override
             public void call(Subscriber<? super List<ProjectBean>> subscriber) {

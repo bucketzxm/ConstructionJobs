@@ -35,7 +35,7 @@
                 android:paddingLeft="3dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="上海市"
+                android:text="上海"
                 android:gravity="center|left" />
         </LinearLayout>
         <LinearLayout

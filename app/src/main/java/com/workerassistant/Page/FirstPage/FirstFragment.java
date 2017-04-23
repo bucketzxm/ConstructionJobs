@@ -130,6 +130,21 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
         );
     }
+//    此处tvCity是顶部Top的TextView，相当于其他page的tvTopCity
+    private String getSelectCity(){
+        String res = null;
+        if(!tvCity.getText().toString().equals("全部")){
+            res = tvCity.getText().toString();
+        }
+        return res;
+    }
+    private String getSelectWorkType(){
+        String res = null;
+        if(!tvWorkType.getText().toString().equals("全部")){
+            res = tvWorkType.getText().toString();
+        }
+        return res;
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -152,7 +167,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private Observable<List<ProjectBean>> projectTopRefresh(){
         netService.ApiService apiService = net.getPersonService();
         final Call<List<ProjectBean>> callIndexProject =
-                apiService.getIndexProject(0,0+PAGE_SIZE);
+                apiService.getIndexProject(0,0+PAGE_SIZE,null,null);
         Observable<List<ProjectBean>> observable = Observable.create(new Observable.OnSubscribe<List<ProjectBean>>() {
             @Override
             public void call(Subscriber<? super List<ProjectBean>> subscriber) {
@@ -187,10 +202,11 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
         return observable;
     }
+
     private Observable<List<PersonBean>> personTopRefresh(){
         netService.ApiService apiService = net.getPersonService();
         final Call<List<PersonBean>> callIndexPerson =
-                apiService.getIndexPerson(0,0+PAGE_SIZE);
+                apiService.getIndexPerson(0,0+PAGE_SIZE,null,null); // 两个null表示不带这两个参数
         Observable<List<PersonBean>> observable = Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
             public void call(Subscriber<? super List<PersonBean>> subscriber) {

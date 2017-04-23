@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         SecondFragment f = new SecondFragment();
         return f;
     }
+    private static final String TAG = "SecondFragment";
     private netConfigure net = netConfigure.getInstance();
     private View rootView = null;//缓存Fragment view
     private LFRecyclerView recycleview;
@@ -327,6 +329,22 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     public void onLongClick(int po) {
         Toast.makeText(getActivity(), "Long:" + po, Toast.LENGTH_SHORT).show();
     }
+    private String getSelectCity(){
+        String res = null;
+        if(!tvTopCity.getText().toString().equals("全部")){
+            res = tvTopCity.getText().toString();
+        }
+        Log.d(TAG,"city:"+res);
+        return res;
+    }
+    private String getSelectWorkType(){
+        String res = null;
+        if(!tvTopWorkType.getText().toString().equals("全部")){
+            res = tvTopWorkType.getText().toString();
+        }
+        Log.d(TAG,"workType:"+res);
+        return res;
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -342,19 +360,39 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
 //        Observable observable = net.getObservableAllPersonData();
         netService.ApiService apiService = net.getPersonService();
         final Call<List<PersonBean>> callIndexPerson =
-                apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
+                apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE
+                ,null,null);
         Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
             public void call(Subscriber<? super List<PersonBean>> subscriber) {
                 Response<List<PersonBean>> beanResponse = null;
                 try {
                     beanResponse = callIndexPerson.execute();
-                    subscriber.onNext(beanResponse.body());
+
                 }catch (Exception e){
-                    Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Error：网络接口执行出错",Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
+
+//                出现返回为null，Response{protocol=http/1.1, code=500, message=Internal Server Error
+//                此时若可以连接服务器，应该是由于返回的是[] 空数组，即没有对应的数据
+//                并让subscriber正常结束onCompleted
+                if (beanResponse.body() == null) {
+                    Log.d(TAG,"beanResponsebody is null,筛选城市与工种没有相关数据");
+                    subscriber.onCompleted();
+                    return;
+                }
+//                    Log.d(TAG,beanResponse.raw().code()+"");
+//                    Log.d(TAG,beanResponse.raw().toString());
+
+                if (beanResponse.isSuccessful()) {
+                    subscriber.onNext(beanResponse.body());
+                }else{
+                    Log.d(TAG, "Error：服务器返回码为"+beanResponse.raw().code());
+                }
+
                 subscriber.onCompleted();
+
             }
             // 指定 subscribe() 发生在 IO 线程
             // 指定 Subscriber 的回调发生在主线程
@@ -364,7 +402,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void onCompleted() {
                         recycleview.stopRefresh(true);
-                        //更新页endIndex
+                        //更新页endIndex，跳过第一页
                         nextIndex();
                     }
 
@@ -391,7 +429,8 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     public void onLoadMore() {
             netService.ApiService apiService = net.getPersonService();
             final Call<List<PersonBean>> callIndexPerson =
-                    apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE);
+                    apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE
+                    ,null,null);
             Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
                 @Override
                 public void call(Subscriber<? super List<PersonBean>> subscriber) {

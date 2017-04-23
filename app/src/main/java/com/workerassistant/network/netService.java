@@ -28,11 +28,15 @@ public class netService {
 
          @GET("person/")
          Call<List<PersonBean>> getIndexPerson(
-                 @Query("start")int start,@Query("end")int end);
+                 @Query("start")int start,@Query("end")int end
+                 ,@Query("city")String city,@Query("workType")String workType);
+
+
 
          @GET("project/")
          Call<List<ProjectBean>> getIndexProject(
-                 @Query("start")int start,@Query("end")int end);
+                 @Query("start")int start,@Query("end")int end
+                ,@Query("city")String city,@Query("workType")String workType);
 
         @POST("person/")
         Call<PersonBean> insertOnePerson(@Body PersonBean route);//传入的参数为RequestBody
