@@ -1,9 +1,11 @@
 package com.workerassistant.bean;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by eva on 2017/4/21.
  */
-
 public class ProjectBean {
     String contactName;
     String contactPhone;
@@ -12,6 +14,11 @@ public class ProjectBean {
     String startTime;
     String endTime;
     String numNeed;
+    String timeStamp;
+
+    public ProjectBean(){
+        setTimeStamp(System.currentTimeMillis()+"");
+    }
 
     public String getCity() {
         return city;
@@ -41,6 +48,14 @@ public class ProjectBean {
         return endTime;
     }
 
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
     public void setCity(String city) {
         this.city = city;
     }
@@ -67,5 +82,17 @@ public class ProjectBean {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    /*
+         * 将时间戳转换为时间
+         */
+    public static String stampToDate(String s){
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
     }
 }

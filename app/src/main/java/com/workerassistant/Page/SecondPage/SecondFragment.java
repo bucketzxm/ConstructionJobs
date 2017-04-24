@@ -26,6 +26,7 @@ import com.workerassistant.CityPick.CityBean;
 import com.workerassistant.CityPick.CityPickActivity;
 import com.workerassistant.CustomUI.RecyclerViewDivider;
 import com.workerassistant.CustomUI.TimePick.ChooseTimeDialog;
+import com.workerassistant.MainActivity;
 import com.workerassistant.R;
 import com.workerassistant.Util.Constant;
 import com.workerassistant.Util.ScreenUtils;
@@ -84,8 +85,9 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     private EditText etStartTime,etEndTime;
     private TextView tvTopCity, tvTopWorkType;
     private TextView tvCity, tvWorkType;
-    private int endIndex;
-    private static int PAGE_SIZE = 5;
+    private int startIndex;
+
+    private static int PAGE_SIZE = 1;
 
     final public static int HANDLE_TIME_ZONE = 29;
     public static Handler handlerThirdPage  = new Handler(){
@@ -184,6 +186,8 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void call(CityBean cityBean) {
                         tvCity.setText(cityBean.getCity());
+                        Refresh();
+//                        选中后更新
                     }
                 });
         tvWorkType = (TextView) view.findViewById(R.id.second_popup_work_type);
@@ -198,6 +202,8 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void call(WorkTypeBean workTypeBean) {
                         tvWorkType.setText(workTypeBean.getWorkTypeName());
+                        Refresh();
+//                        选中后更新
                     }
                 });
         btnSubmit = (Button)view.findViewById(R.id.second_popup_submit);
@@ -223,11 +229,13 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                 projectBean.setWorkType(tvWorkType.getText().toString());
                 net.insertProject(projectBean);
                 //送出后刷新另一个页面
-                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
-                changeAnswerEvent.setTarget("thirdFragment");
-                changeAnswerEvent.setAnswer("onFresh");
-                RxBus.getDefault().post(changeAnswerEvent);
+//                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
+//                changeAnswerEvent.setTarget("thirdFragment");
+//                changeAnswerEvent.setAnswer("onFresh");
+//                RxBus.getDefault().post(changeAnswerEvent);
                 popupWindow.dismiss();
+                MainActivity mainActivity = (MainActivity)getActivity();
+                mainActivity.jumpToFragment(3);
             }
         });
     }
@@ -250,7 +258,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                 .subscribe(new Action1<ChangeAnswerEvent>() {
                     @Override
                     public void call(ChangeAnswerEvent changeAnswerEvent) {
-                        onRefresh();
+                        Refresh();
 //                        String target = changeAnswerEvent.getTarget();
 //                        String answer = changeAnswerEvent.getAnswer();
 //                        if(target!=null && answer!=null){
@@ -296,28 +304,27 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         recycleview.setItemAnimator(new DefaultItemAnimator());
         recycleview.addItemDecoration(new RecyclerViewDivider(getActivity(), LinearLayoutManager.VERTICAL,2, Color.GRAY));
 //        datas.addAll(initData());
-        onRefresh();
+        Refresh();
         adapter = new SecondPageListAdapter(datas);
         recycleview.setAdapter(adapter);
-        endIndex = 0;
     }
     private List<PersonBean> initData(){
         List<PersonBean>beanList = new ArrayList<>();
         return beanList;
 
     }
-    private void initEndIndex(){
-        endIndex = 0;
+    private void initStartIndex(){
+        startIndex = 0;
     }
-    public void setEndIndex(int endIndex) {
-        this.endIndex = endIndex;
+    public void setStartIndex(int endIndex) {
+        this.startIndex = endIndex;
     }
 
-    public int getEndIndex() {
-        return endIndex;
+    public int getStartIndex() {
+        return startIndex;
     }
     public void nextIndex(){
-        this.endIndex += PAGE_SIZE;
+        this.startIndex += PAGE_SIZE  ;
     }
 
     @Override
@@ -353,15 +360,29 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         mSubscriptionOnfresh.unsubscribe();
         mTimeZoneSubscription.unsubscribe();
     }
+
     @Override
-    public void onRefresh() {
-//         每次页还原
-        initEndIndex();
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden) {
+            Log.d(TAG, "hidden " + hidden);
+
+        }else{
+            Refresh();
+            Log.d(TAG,"hidden "+ hidden);
+        }
+    }
+
+    private void Refresh(){
+        //         每次页还原
+        Log.d(TAG,"in Refresh()");
+        initStartIndex();
 //        Observable observable = net.getObservableAllPersonData();
         netService.ApiService apiService = net.getPersonService();
         final Call<List<PersonBean>> callIndexPerson =
-                apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE
-                ,null,null);
+                apiService.getIndexPerson(getStartIndex(), getStartIndex()+PAGE_SIZE
+                        ,null,null);
+        Log.d(TAG,"endIndex:"+ getStartIndex()+"+"+String.valueOf(getStartIndex()+PAGE_SIZE));
         Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
             public void call(Subscriber<? super List<PersonBean>> subscriber) {
@@ -382,8 +403,8 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     subscriber.onCompleted();
                     return;
                 }
-//                    Log.d(TAG,beanResponse.raw().code()+"");
-//                    Log.d(TAG,beanResponse.raw().toString());
+                    Log.d(TAG,beanResponse.raw().code()+"");
+                    Log.d(TAG,beanResponse.raw().toString());
 
                 if (beanResponse.isSuccessful()) {
                     subscriber.onNext(beanResponse.body());
@@ -422,15 +443,19 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
 //                adapter.addFirstData(new PersonBean());
 ////                adapter.notifyItemInserted(0);
 ////                adapter.notifyItemRangeChanged(0,datas.size());
-
+    }
+    @Override
+    public void onRefresh() {
+        Refresh();
     }
 
     @Override
     public void onLoadMore() {
             netService.ApiService apiService = net.getPersonService();
             final Call<List<PersonBean>> callIndexPerson =
-                    apiService.getIndexPerson(getEndIndex(),getEndIndex()+PAGE_SIZE
+                    apiService.getIndexPerson(getStartIndex(), getStartIndex()+PAGE_SIZE
                     ,null,null);
+        Log.d(TAG,"endIndex:"+ getStartIndex()+"+"+ String.valueOf(getStartIndex()+PAGE_SIZE));
             Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
                 @Override
                 public void call(Subscriber<? super List<PersonBean>> subscriber) {
@@ -451,8 +476,9 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void onCompleted() {
                         recycleview.stopLoadMore();
-                        //更新页endIndex
-                        nextIndex();
+                        //onCompleted  不用改变任何
+                        //改为在onNext中 更新 startIndex+=返回条数
+
                     }
 
                     @Override
@@ -465,12 +491,9 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     public void onNext(List<PersonBean> beanList) {
                         adapter.addDataList(beanList);
                         adapter.notifyDataSetChanged();
+                        setStartIndex(getStartIndex()+beanList.size());
                     }
                 });
-//                recycleview.stopLoadMore();
-//                adapter.addLastData(new PersonBean());
-////                adapter.notifyItemRangeInserted(datas.size()-1,1);
-//                adapter.notifyDataSetChanged();
     }
 
 
@@ -500,21 +523,3 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
 
 
 }
-
-
-//        mSubscriptionTopWorkType = RxBus.getDefault().toObserverable(WorkTypeBean.class)
-//                .subscribe(new Action1<WorkTypeBean>() {
-//                    @Override
-//                    public void call(WorkTypeBean workTypeBean) {
-//                        tvTopWorkType.setText(workTypeBean.getWorkTypeName());
-//                    }
-//                });
-
-//        mSubscriptionTopCity = RxBus.getDefault().toObserverable(CityBean.class)
-//                .subscribe(new Action1<CityBean>() {
-//                    @Override
-//                    public void call(CityBean cityBean) {
-//
-//                        tvTopCity.setText(cityBean.getCity());
-//                    }
-//                });

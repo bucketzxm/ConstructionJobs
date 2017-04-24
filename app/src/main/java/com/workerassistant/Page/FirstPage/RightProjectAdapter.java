@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.workerassistant.R;
 import com.workerassistant.bean.ProjectBean;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -61,7 +63,17 @@ public class RightProjectAdapter extends BaseAdapter {
     }
     public void clearAddDataList(List<ProjectBean> beanList){
         list.clear();
-        list.addAll(beanList);
+        addAllDatas(beanList);
+    }
+
+    private void addAllDatas(List<ProjectBean> d){
+        list.addAll(d);
+        Collections.sort(list, new Comparator<ProjectBean>() {
+            @Override
+            public int compare(ProjectBean o1, ProjectBean o2) {
+                return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+            }
+        });
     }
     private int selectedPosition = 0;
 

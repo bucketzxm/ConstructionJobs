@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.workerassistant.R;
 import com.workerassistant.bean.ProjectBean;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -65,10 +67,21 @@ public class ThirdPageListAdapter extends RecyclerView.Adapter<ThirdPageListAdap
     }
     public void ClearaddDataList(List<ProjectBean> d){
         datas.clear();
-        datas.addAll(d);
+        addAllDatas(d);
+
     }
     public void addDataList(List<ProjectBean> d){
+        addAllDatas(d);
+    }
+
+    private void addAllDatas(List<ProjectBean> d){
         datas.addAll(d);
+        Collections.sort(datas, new Comparator<ProjectBean>() {
+            @Override
+            public int compare(ProjectBean o1, ProjectBean o2) {
+                return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+            }
+        });
     }
 
     public void addFirstData(ProjectBean d){

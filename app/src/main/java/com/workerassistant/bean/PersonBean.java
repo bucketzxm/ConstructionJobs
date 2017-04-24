@@ -15,6 +15,11 @@ public class PersonBean {
     String city;
     String workType;
     String rating;
+    String timeStamp;
+    public PersonBean(){
+        setTimeStamp(System.currentTimeMillis()+"");
+    }
+
     public String getName() {
         return name;
     }
@@ -41,6 +46,14 @@ public class PersonBean {
 
     public String getRating() {
         return rating;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public void setRating(String rating) {

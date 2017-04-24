@@ -1,5 +1,6 @@
 package com.workerassistant.WorkType;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -9,9 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.workerassistant.CustomUI.TagFlow.TagFlowFilterAdapter;
+import com.workerassistant.MainActivity;
 import com.workerassistant.R;
+import com.workerassistant.Util.Constant;
 import com.workerassistant.WorkType.bean.WorkTypeBean;
 
 import java.util.ArrayList;
@@ -27,7 +31,7 @@ public class WorkTypeActivity extends AppCompatActivity {
     private SearchView mSearchView;
     private FrameLayout mProgressBar;
 //    private RecyclerView recyclerView;
-
+    private TextView tvSelectAll;
     //    private WorkTypeAdapter workTypeAdapter;
     private ListView mListView;
 //    private Button btnReset,btnSubmit;
@@ -75,6 +79,21 @@ public class WorkTypeActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
+        tvSelectAll = (TextView) findViewById(R.id.select_all_toolbar);
+        tvSelectAll.setVisibility(View.VISIBLE);
+        tvSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(WorkTypeActivity.this, "选择所有工种", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("WorkType","全部");
+                intent.putExtras(bundle);
+                intent.setClass(WorkTypeActivity.this, MainActivity.class);
+                setResult(Constant.requestThirdTopCity,intent);
                 finish();
             }
         });

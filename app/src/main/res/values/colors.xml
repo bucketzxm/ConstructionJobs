@@ -47,21 +47,21 @@
 
 
     <!-- popupWindow Filter Color Set  -->
-    <color name="white_button_on">#C62828</color>
+    <color name="white_button_on">#03A9F4</color>
     <color name="white_button_off">#FFFFFF</color>
     <color name="white_button_bg_on">#FFFFFF</color>
-    <color name="white_button_bg_off">#C62828</color>
-    <color name="white_button_stroke_on">#C62828</color>
-    <color name="white_button_stroke_off">#C62828</color>
+    <color name="white_button_bg_off">#03A9F4</color>
+    <color name="white_button_stroke_on">#03A9F4</color>
+    <color name="white_button_stroke_off">#03A9F4</color>
     <color name="white_button_text_on">#FFFFFF</color>
-    <color name="white_button_text_off">#C62828</color>
+    <color name="white_button_text_off">#03A9F4</color>
 
     <color name="red_button_on">#FFFFFF</color>
-    <color name="red_button_off">#C62828</color>
-    <color name="red_button_bg_on">#C62828</color>
+    <color name="red_button_off">#03A9F4</color>
+    <color name="red_button_bg_on">#03A9F4</color>
     <color name="red_button_bg_off">#FFFFFF</color>
-    <color name="red_button_stroke_off">#C62828</color>
-    <color name="red_button_stroke_on">#C62828</color>
+    <color name="red_button_stroke_off">#03A9F4</color>
+    <color name="red_button_stroke_on">#03A9F4</color>
 
     <color name="flow_txt_off">#757575</color>
     <color name="flow_txt_on">#C62828</color>

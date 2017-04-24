@@ -57,9 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Base.Widget.AppCompat.RatingBar"
-                android:minHeight="14dp"
-                android:maxHeight="14dp"
-
+                android:minHeight="16dp"
+                android:maxHeight="16dp"
                 app:mrb_progressTint="@color/md_amber_600"
                 app:mrb_secondaryProgressTint="@color/md_amber_600"
                 />
@@ -78,6 +77,16 @@
                 android:text="保温工人"
                 android:textColor="@color/md_red_600"
                 android:textSize="16sp"/>
+            <TextView
+                android:layout_centerVertical="true"
+                android:text="+8613900003333"
+                android:textSize="18sp"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@drawable/ic_phone_green_500_18dp"
+                android:textColor="@color/md_green_500"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/second_page_item_phone"/>
 
 
         </RelativeLayout>
@@ -86,15 +95,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp">
             <TextView
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="+8613900003333"
-                android:textSize="18sp"
-                android:drawableLeft="@drawable/ic_phone_green_500_18dp"
-                android:textColor="@color/md_green_500"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/second_page_item_phone"/>
+                android:id="@+id/second_page_item_city"
+                android:text="上海"
+                android:textColor="@color/md_light_blue_500"
+                android:textSize="16sp"
+                />
         </RelativeLayout>
 
     </LinearLayout>

@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.workerassistant.R;
 import com.workerassistant.bean.PersonBean;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
@@ -33,6 +35,7 @@ public class SecondPageListAdapter extends RecyclerView.Adapter<SecondPageListAd
         holder.tvType.setText(datas.get(position).getWorkType());
         holder.tvLevel.setText(datas.get(position).getLevel());
         holder.tvPhone.setText(datas.get(position).getPhone());
+        holder.tvCity.setText(datas.get(position).getCity());
 //        statue 空闲状态没有动 -
         holder.ratingStar.setRating(4.5f);
 //        holder.textView.setPadding(0, 20 * position, 0, 0);
@@ -44,7 +47,7 @@ public class SecondPageListAdapter extends RecyclerView.Adapter<SecondPageListAd
     }
 
     class MasonryView extends RecyclerView.ViewHolder {
-        private TextView tvName,tvStatu,tvLevel,tvType,tvPhone;
+        private TextView tvName,tvStatu,tvLevel,tvType,tvPhone,tvCity;
         private MaterialRatingBar ratingStar;
         public MasonryView(View itemView) {
             super(itemView);
@@ -53,17 +56,29 @@ public class SecondPageListAdapter extends RecyclerView.Adapter<SecondPageListAd
             tvLevel=(TextView) itemView.findViewById(R.id.second_page_item_level);
             tvPhone=(TextView) itemView.findViewById(R.id.second_page_item_phone);
             tvType=(TextView) itemView.findViewById(R.id.second_page_item_type);
+            tvCity=(TextView) itemView.findViewById(R.id.second_page_item_city);
             ratingStar = (MaterialRatingBar) itemView.findViewById(R.id.second_page_item_star);
         }
 
     }
 
     public void addDataList(List<PersonBean> d){
-        datas.addAll(d);
+        addAllDatas(d);
     }
     public void ClearaddDataList(List<PersonBean> d){
         datas.clear();
+        addAllDatas(d);
+    }
+    private void addAllDatas(List<PersonBean> d){
         datas.addAll(d);
+        Collections.sort(datas, new Comparator<PersonBean>() {
+            @Override
+            public int compare(PersonBean o1, PersonBean o2) {
+//                Log.d("o2.getTimeStamp()"+o2.getTimeStamp(),
+//                        " o1.getTimeStamp()"+(o1.getTimeStamp()));
+                return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+            }
+        });
     }
 
     public void addFirstData(PersonBean d){

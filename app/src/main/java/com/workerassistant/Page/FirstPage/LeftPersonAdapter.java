@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.workerassistant.R;
 import com.workerassistant.bean.PersonBean;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
@@ -65,8 +67,19 @@ public class LeftPersonAdapter extends BaseAdapter {
     }
     public void clearAddDataList(List<PersonBean> beanList){
         list.clear();
-        list.addAll(beanList);
+        addAllDatas(beanList);
     }
+
+    private void addAllDatas(List<PersonBean> d){
+        list.addAll(d);
+        Collections.sort(list, new Comparator<PersonBean>() {
+            @Override
+            public int compare(PersonBean o1, PersonBean o2) {
+                return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+            }
+        });
+    }
+
     private int selectedPosition = 0;
 
     public void setSelectedPosition(int selectedPosition) {
@@ -80,8 +93,10 @@ public class LeftPersonAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView tvName,tvWorkType;
         MaterialRatingBar ratingBar;
-
     }
+
+
+
 }
 
 

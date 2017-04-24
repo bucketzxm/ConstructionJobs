@@ -1,6 +1,7 @@
 package com.workerassistant.CityPick;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,10 +12,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.workerassistant.CustomUI.IndexBar.widget.IndexBar;
 import com.workerassistant.CustomUI.suspension.SuspensionDecoration;
+import com.workerassistant.MainActivity;
 import com.workerassistant.R;
+import com.workerassistant.Util.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +51,7 @@ public class CityPickActivity extends AppCompatActivity {
     private ImageView back;
     private SearchView mSearchView;
     private FrameLayout mProgressBar;
+    private TextView tvSelectAll;
     private SearchCityFragment mSearchFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +187,21 @@ public class CityPickActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
+        tvSelectAll = (TextView) findViewById(R.id.select_all_toolbar);
+        tvSelectAll.setVisibility(View.VISIBLE);
+        tvSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(CityPickActivity.this, "选择所有城市", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("City","全部");
+                intent.putExtras(bundle);
+                intent.setClass(CityPickActivity.this, MainActivity.class);
+                setResult(Constant.requestThirdTopCity,intent);
                 finish();
             }
         });

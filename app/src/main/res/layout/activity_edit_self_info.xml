@@ -23,138 +23,124 @@
             android:paddingRight="24dp"
             android:columnCount="1" >
 
-            <GridLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
+                android:gravity="center_vertical"
+                >
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:text="我的名字："
                     />
                 <EditText
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/edit_self_info_name"
-                    android:layout_columnSpan="3"
                     android:layout_gravity="fill"
-                    android:background="@drawable/editsharp_select"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="36dp"
-                    android:layout_height="30dp"
-                    android:textSize="14sp"
+                    style="@style/edit_text_blue"
                     />
-            </GridLayout>
+            </LinearLayout>
 
-            <GridLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
+                android:gravity="center_vertical"
+                >
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:text="我的工种："
                     />
-
                 <EditText
-                    android:id="@+id/edit_self_info_work_type"
-                    android:layout_columnSpan="3"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/edit_self_info_name"
                     android:layout_gravity="fill"
-                    android:background="@drawable/editsharp_select"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="36dp"
-                    android:layout_height="30dp"
-                    android:textSize="14sp"
-                    android:inputType="textPhonetic"
+                    style="@style/edit_text_blue"
                     />
-            </GridLayout>
+            </LinearLayout>
 
-            <GridLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
+                android:gravity="center_vertical"
+                >
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:text="手机号码："
                     />
-
                 <EditText
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/edit_self_info_phone"
-                    android:layout_columnSpan="3"
                     android:layout_gravity="fill"
-                    android:background="@drawable/editsharp_select"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="36dp"
-                    android:layout_height="30dp"
-                    android:textSize="14sp"
-                    android:inputType="number"
+                    style="@style/edit_text_blue"
                     />
-            </GridLayout>
+            </LinearLayout>
 
-            <GridLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
+                android:gravity="center_vertical"
+                >
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:text="我的身份："
                     />
-
                 <EditText
-                    android:id="@+id/edit_self_info_identity"
-                    android:layout_columnSpan="3"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/edit_self_info_level"
                     android:layout_gravity="fill"
-                    android:background="@drawable/editsharp_select"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="36dp"
-                    android:layout_height="30dp"
-                    android:textSize="14sp"
-
+                    style="@style/edit_text_blue"
                     />
-            </GridLayout>
-
-            <GridLayout
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
-                android:columnCount="4"
-                android:rowCount="1">
+                android:gravity="center_vertical"
+                >
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:text="我的城市："
                     />
-
                 <EditText
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/edit_self_info_city"
-                    android:layout_columnSpan="3"
                     android:layout_gravity="fill"
-                    android:background="@drawable/editsharp_select"
-                    android:textSize="14sp"
-                    android:textColorHint="#a5a5a5"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="36dp"
+                    style="@style/edit_text_blue"
                     />
-            </GridLayout>
+            </LinearLayout>
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

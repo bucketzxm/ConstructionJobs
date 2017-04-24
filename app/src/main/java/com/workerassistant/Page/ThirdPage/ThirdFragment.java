@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.workerassistant.CityPick.CityBean;
 import com.workerassistant.CityPick.CityPickActivity;
 import com.workerassistant.CustomUI.RecyclerViewDivider;
+import com.workerassistant.MainActivity;
 import com.workerassistant.R;
 import com.workerassistant.Util.Constant;
 import com.workerassistant.Util.ScreenUtils;
@@ -50,7 +51,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static android.content.ContentValues.TAG;
 import static com.workerassistant.R.id.third_page_rv_list;
 
 /**
@@ -62,14 +62,15 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
         ThirdFragment f = new ThirdFragment();
         return f;
     }
-
+    private static final String TAG = "ThirdFragment";
     private View rootView = null;//缓存Fragment view
     private netConfigure net = netConfigure.getInstance();
-    private static int PAGE_SIZE = 5;
+    private static int PAGE_SIZE = 1;
     private LFRecyclerView recycleview;
     private ThirdPageListAdapter adapter;
     private List<ProjectBean> datas  = new ArrayList<ProjectBean>();
-    private int endIndex;
+    private int startIndex;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.third_page_main, container, false);
@@ -89,18 +90,20 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
 //    观察更新
     private Subscription mSubscriptionOnfresh;
     private void initEndIndex(){
-        endIndex = 0;
-    }
-    public int getEndIndex(){
-        return endIndex;
+        startIndex = 0;
     }
 
-    public void setEndIndex(int endIndex) {
-        this.endIndex = endIndex;
+    public int getStartIndex(){
+        return startIndex;
     }
 
-    public void nextEndIndex(){
-        this.endIndex += PAGE_SIZE;
+
+    public void setStartIndex(int endIndex) {
+        this.startIndex = endIndex;
+    }
+
+    public void nextStartIndex(){
+        this.startIndex += PAGE_SIZE;
     }
 
     private void initPopUpWindow(){
@@ -147,6 +150,8 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     @Override
                     public void call(CityBean cityBean) {
                         tvCity.setText(cityBean.getCity());
+                        Refresh();
+//                        选中后更新
                     }
                 });
         tvWorkType = (TextView)view.findViewById(R.id.third_popup_work_type);
@@ -161,6 +166,8 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     @Override
                     public void call(WorkTypeBean workTypeBean) {
                         tvWorkType.setText(workTypeBean.getWorkTypeName());
+                        Refresh();
+//                        选中后更新
                     }
                 });
 
@@ -199,13 +206,29 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                 netConfigure net = netConfigure.getInstance();
                 net.insertPerson(personBean);
 //                送出后刷新页面
-                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
-                changeAnswerEvent.setTarget("secondFragment");
-                changeAnswerEvent.setAnswer("onFresh");
-                RxBus.getDefault().post(changeAnswerEvent);
+
+//                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
+//                changeAnswerEvent.setTarget("secondFragment");
+//                changeAnswerEvent.setAnswer("onFresh");
+//                RxBus.getDefault().post(changeAnswerEvent);
+                MainActivity mainActivity = (MainActivity)getActivity();
+                mainActivity.jumpToFragment(2);
                 popupWindow.dismiss();
             }
         });
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden) {
+            Log.d(TAG, "hidden " + hidden);
+
+        }else{
+//           hidden false   表示界面可见
+            Log.d(TAG,"hidden "+ hidden);
+            Refresh();
+        }
     }
     private void popupWindowClick()
     {
@@ -225,7 +248,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                 .subscribe(new Action1<ChangeAnswerEvent>() {
                     @Override
                     public void call(ChangeAnswerEvent changeAnswerEvent) {
-                        onRefresh();
+                        Refresh();
 //                            String target = changeAnswerEvent.getTarget();
 //                            String answer = changeAnswerEvent.getAnswer();
 //                        Log.d("thirdFragment","mSubscriptionOnfresh:"+target+" "+answer);
@@ -270,7 +293,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
         recycleview.setScrollChangeListener(this);
         recycleview.setItemAnimator(new DefaultItemAnimator());
         recycleview.addItemDecoration(new RecyclerViewDivider(getActivity(), LinearLayoutManager.VERTICAL,2, Color.GRAY));
-        onRefresh();
+        Refresh();
         adapter = new ThirdPageListAdapter(getActivity(),datas);
         recycleview.setAdapter(adapter);
     }
@@ -305,15 +328,15 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
         mSubscriptionCity.unsubscribe();
         mSubscriptionOnfresh.unsubscribe();
     }
-
-    @Override
-    public void onRefresh() {
+    private void Refresh(){
         //         每次页还原
+
         initEndIndex();
         netService.ApiService apiService = net.getPersonService();
         final Call<List<ProjectBean>> callIndexProject =
-                apiService.getIndexProject(getEndIndex(),getEndIndex()+PAGE_SIZE
-                        ,null,null);
+                apiService.getIndexProject(getStartIndex(), getStartIndex()+PAGE_SIZE
+                        ,getSelectCity(),getSelectWorkType());
+        Log.d(TAG,"endIndex:"+ getStartIndex()+"+"+ String.valueOf(getStartIndex()+PAGE_SIZE));
         Observable.create(new Observable.OnSubscribe<List<ProjectBean>>() {
             @Override
             public void call(Subscriber<? super List<ProjectBean>> subscriber) {
@@ -334,8 +357,8 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     subscriber.onCompleted();
                     return;
                 }
-//                    Log.d(TAG,beanResponse.raw().code()+"");
-//                    Log.d(TAG,beanResponse.raw().toString());
+                    Log.d(TAG,beanResponse.raw().code()+"");
+                    Log.d(TAG,beanResponse.raw().toString());
 
                 if (beanResponse.isSuccessful()) {
                     subscriber.onNext(beanResponse.body());
@@ -353,8 +376,10 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     @Override
                     public void onCompleted() {
                         recycleview.stopRefresh(true);
-                        //更新页endIndex
-                        nextEndIndex();
+                        Log.d(TAG,"onCompleted");
+                        //每次下拉更新，完全更新后更新页startIndex
+                        //现在改为在onNext中更新得到数组的长度
+//                        nextStartIndex();
                     }
 
                     @Override
@@ -367,19 +392,24 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     public void onNext(List<ProjectBean> beanList) {
                         adapter.ClearaddDataList(beanList);
                         adapter.notifyDataSetChanged();
+                        setStartIndex(getStartIndex()+beanList.size());
                     }
                 });
 //        单个插入时更新
 //                adapter.notifyItemInserted(0);
 //                adapter.notifyItemRangeChanged(0,datas.size());
     }
+    @Override
+    public void onRefresh() {
+        Refresh();
+    }
 
     @Override
     public void onLoadMore() {
         netService.ApiService apiService = net.getPersonService();
         final Call<List<ProjectBean>> callIndexProject =
-                apiService.getIndexProject(getEndIndex(),getEndIndex()+PAGE_SIZE
-                ,null,null);
+                apiService.getIndexProject(getStartIndex(), getStartIndex()+PAGE_SIZE
+                ,getSelectCity(),getSelectWorkType());
         Observable.create(new Observable.OnSubscribe<List<ProjectBean>>() {
             @Override
             public void call(Subscriber<? super List<ProjectBean>> subscriber) {
@@ -402,7 +432,6 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     public void onCompleted() {
                         recycleview.stopLoadMore();
                         //更新页endIndex
-                        nextEndIndex();
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -413,6 +442,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                     public void onNext(List<ProjectBean> beanList) {
                         adapter.addDataList(beanList);
                         adapter.notifyDataSetChanged();
+                        setStartIndex(getStartIndex()+beanList.size());
                     }
                 });
 //                adapter.notifyItemRangeInserted(datas.size()-1,1);
@@ -442,89 +472,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                 tvTopWorkType.setText(bundle.getString("WorkType","没有选择"));
                 break;
         }
-        //        Subscription mSubscriTopCity = RxBus.getDefault().toObserverable(CityBean.class)
-//                .subscribe(new Action1<CityBean>() {
-//                    @Override
-//                    public void call(CityBean cityBean) {
-//
-//
-//                    }
-//                });
-//
-//        Subscription mSubscriTopWorkType = RxBus.getDefault().toObserverable(WorkTypeBean.class)
-//                .subscribe(new Action1<WorkTypeBean>() {
-//                    @Override
-//                    public void call(WorkTypeBean workTypeBean) {
-//                        tvTopWorkType.setText(workTypeBean.getWorkTypeName());
-//                    }
-//                });
 
 
     }
 }
-
-
-
-
-/*
-    private void initBase() {
-//        adapter = new ThirdPageListAdapter(getActivity(),datas);
-//        recyclerView = (LFRecyclerView)rootView.findViewById(R.id.third_page_rv_list);
-////        recyclerView.addItemDecoration(new RecyclerViewDivider(getActivity(),LinearLayoutManager.VERTICAL));
-////        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL));
-//        recyclerView.addItemDecoration(new RecyclerViewDivider(getActivity(), LinearLayoutManager.VERTICAL));
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE &&
-//                        (layoutManager.findLastVisibleItemPosition() ==
-//                                layoutManager.getItemCount() - 1)
-//                        && !isRefreshing) {
-//                    isRefreshing = true;
-//                    //处理逻辑
-//                }
-//            }
-//        });
-//        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 6, GridLayoutManager.VERTICAL, false));
-//        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        List<Cloth> results = new ArrayList<>();
-
-        for(int i=0;i<18;i++)
-        {
-            results.add(new Cloth());
-        }
-
-        if(newDatashow!=null&&!newDatashow.isEmpty()) {
-//            for (Cloth item : newDatashow) {
-//                results.remove(1);
-//            }
-            results.addAll(1, newDatashow);
-        }
-        dataHot = results;
-        recyclerView.setAdapter(adapter = new OneRecycleAdapter(getActivity(),dataHot));
-    }
-
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lay_fresh.setRefreshing(false);
-
-//                List<Cloth>newdata = adapter.InitPhotoList();
-//                if(!newdata.equals(newDatashow)&&!newDatashow.isEmpty())
-//                {
-//                    newDatashow = newdata;
-//                }
-//
-//
-//                if(!newDatashow.isEmpty()) {
-//                    adapter.addALL(1, newDatashow);
-//                }
-                adapter.postAsynHttp();
-                adapter.notifyDataSetChanged();
-            }
-        }, 1000);
-    }*/
