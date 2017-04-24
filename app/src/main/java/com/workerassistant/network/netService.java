@@ -26,6 +26,9 @@ public class netService {
         @GET("person/")
         Call<List<PersonBean>> getPerson();
 
+         @GET("project/")
+        Call<List<ProjectBean>> getProject();
+
          @GET("person/")
          Call<List<PersonBean>> getIndexPerson(
                  @Query("start")int start,@Query("end")int end

@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     private static final String TAG = "ThirdFragment";
     private View rootView = null;//缓存Fragment view
     private netConfigure net = netConfigure.getInstance();
-    private static int PAGE_SIZE = 1;
+    private static int PAGE_SIZE = 3;
     private LFRecyclerView recycleview;
     private ThirdPageListAdapter adapter;
     private List<ProjectBean> datas  = new ArrayList<ProjectBean>();
@@ -83,7 +84,8 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     private View darkView;
     private Button btnSubmit,btnReset;
     private Animation animIn, animOut;
-    private EditText etName,etPhone,etLevel;
+    private EditText etName,etPhone;
+    private Spinner etLevel;
     private TextView tvCity,tvWorkType,tvTopCity,tvTopWorkType;
     private EditText etAge;
     private Subscription mSubscriptionWorkType,mSubscriptionCity;
@@ -135,9 +137,18 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
         etName = (EditText)view.findViewById(R.id.third_popup_name);
         etPhone = (EditText)view.findViewById(R.id.third_popup_phone);
         etAge =(EditText)view.findViewById(R.id.third_popup_age);
-        etLevel = (EditText)view.findViewById(R.id.third_popup_level);
-
-
+        etLevel = (Spinner)view.findViewById(R.id.third_popup_level);
+//        etLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
         tvCity = (TextView)view.findViewById(R.id.third_popup_city);
         tvCity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,7 +210,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
 //                personBean.setAge(Integer.parseInt(etAge.getText().toString()));
                 personBean.setAge( etAge.getText().toString() );
                 personBean.setCity(tvCity.getText().toString());
-                personBean.setLevel(etLevel.getText().toString());
+                personBean.setLevel((String)etLevel.getSelectedItem());
                 personBean.setName(etName.getText().toString());
                 personBean.setPhone(etPhone.getText().toString());
                 personBean.setWorkType(tvWorkType.getText().toString());

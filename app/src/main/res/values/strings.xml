@@ -1291,7 +1291,9 @@
         <item>砌筑工</item>
         <item>抹灰工</item>
         <item>油漆工</item>
-
-
+    </string-array>
+    <string-array name="level">
+        <item>普通工人</item>
+        <item>包工头</item>
     </string-array>
 </resources>

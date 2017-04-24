@@ -3,7 +3,6 @@ package com.workerassistant.Page.FirstPage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,9 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{//implements SwipeRefreshLayout.OnRefreshListener {
+import static android.content.ContentValues.TAG;
+
+public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnRefreshListener {
     public static FirstFragment newInstance() {
         FirstFragment f = new FirstFragment();
         return f;
@@ -48,7 +49,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private ListView topPersonList, topProjectList;
     private ImageView imgBg;
     private TextView tvCity,tvWorkType;
-    private SwipeRefreshLayout lay_fresh;
+//    private SwipeRefreshLayout lay_fresh;
     private LeftPersonAdapter topPersonAdapter;
     private static int PAGE_SIZE = 5;
     private List<PersonBean> topPersonData = new ArrayList<>();
@@ -57,13 +58,13 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.firstpage_main, container, false);
-        lay_fresh = (SwipeRefreshLayout) rootView.findViewById(R.id.first_page_refresh);
-        lay_fresh.setColorSchemeResources(R.color.color1, R.color.color1);
-        lay_fresh.setOnRefreshListener(this);
+//        lay_fresh = (SwipeRefreshLayout) rootView.findViewById(R.id.first_page_refresh);
+//        lay_fresh.setColorSchemeResources(R.color.color1, R.color.color1);
+//        lay_fresh.setOnRefreshListener(this);
         initList();
         initTopBar();
         initBase();
-        onRefresh();
+        Refresh();
         return rootView;
     }
     private void initTopBar(){
@@ -164,10 +165,24 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 break;
         }
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden) {
+            Log.d(TAG, "hidden " + hidden);
+
+        }else{
+//           hidden false   表示界面可见
+            Log.d(TAG,"hidden "+ hidden);
+            Refresh();
+        }
+    }
     private Observable<List<ProjectBean>> projectTopRefresh(){
         netService.ApiService apiService = net.getPersonService();
         final Call<List<ProjectBean>> callIndexProject =
-                apiService.getIndexProject(0,0+PAGE_SIZE,null,null);
+//                apiService.getIndexProject(0,0+PAGE_SIZE,null,null);
+                apiService.getProject();
         Observable<List<ProjectBean>> observable = Observable.create(new Observable.OnSubscribe<List<ProjectBean>>() {
             @Override
             public void call(Subscriber<? super List<ProjectBean>> subscriber) {
@@ -191,7 +206,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
             @Override
             public void onError(Throwable e) {
-                lay_fresh.setRefreshing(false);
+//                lay_fresh.setRefreshing(false);
                 Toast.makeText(getActivity(),"Error：服务器连接失败 "+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
             @Override
@@ -206,7 +221,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private Observable<List<PersonBean>> personTopRefresh(){
         netService.ApiService apiService = net.getPersonService();
         final Call<List<PersonBean>> callIndexPerson =
-                apiService.getIndexPerson(0,0+PAGE_SIZE,null,null); // 两个null表示不带这两个参数
+//                apiService.getIndexPerson(0,0+PAGE_SIZE,null,null); // 两个null表示不带这两个参数
+                apiService.getPerson();
         Observable<List<PersonBean>> observable = Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
             public void call(Subscriber<? super List<PersonBean>> subscriber) {
@@ -226,11 +242,11 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void onCompleted() {
                 Log.d("FirstPage","PersonList更新完毕");
-                lay_fresh.setRefreshing(false);
+//                lay_fresh.setRefreshing(false);
             }
             @Override
             public void onError(Throwable e) {
-                lay_fresh.setRefreshing(false);
+//                lay_fresh.setRefreshing(false);
                 Toast.makeText(getActivity(),"Error：服务器连接失败",Toast.LENGTH_SHORT).show();
             }
             @Override
@@ -241,58 +257,11 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
         return observable;
     }
-    @Override
-    public void onRefresh() {
+
+    public void Refresh() {
         personTopRefresh();
         projectTopRefresh();
 
 //        lay_fresh.setRefreshing(false);
     }
 }
-
-
-/*
-    private void initBase() {
-        RecyclerView recyclerView = (RecyclerView) this.rootView.findViewById(R.id.nearpage_rv_list);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 6, GridLayoutManager.VERTICAL, false));
-//        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        List<Cloth> results = new ArrayList<>();
-
-        for(int i=0;i<18;i++)
-        {
-            results.add(new Cloth());
-        }
-
-        if(newDatashow!=null&&!newDatashow.isEmpty()) {
-//            for (Cloth item : newDatashow) {
-//                results.remove(1);
-//            }
-            results.addAll(1, newDatashow);
-        }
-        dataHot = results;
-        recyclerView.setAdapter(adapter = new OneRecycleAdapter(getActivity(),dataHot));
-    }
-
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lay_fresh.setRefreshing(false);
-
-//                List<Cloth>newdata = adapter.InitPhotoList();
-//                if(!newdata.equals(newDatashow)&&!newDatashow.isEmpty())
-//                {
-//                    newDatashow = newdata;
-//                }
-//
-//
-//                if(!newDatashow.isEmpty()) {
-//                    adapter.addALL(1, newDatashow);
-//                }
-                adapter.postAsynHttp();
-                adapter.notifyDataSetChanged();
-            }
-        }, 1000);
-    }*/
