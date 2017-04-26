@@ -87,7 +87,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
     private TextView tvCity, tvWorkType;
     private int startIndex;
 
-    private static int PAGE_SIZE = 4;
+    private static int PAGE_SIZE = 5;
 
     final public static int HANDLE_TIME_ZONE = 29;
     public static Handler handlerThirdPage  = new Handler(){

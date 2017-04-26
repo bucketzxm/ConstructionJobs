@@ -9,26 +9,16 @@ import java.util.Date;
  * Created by eva on 2017/4/21.
  */
 public class ProjectBean {
-<<<<<<< HEAD
     String contactName;
     String contactPhone;
     String city;
-=======
-    private String contactName;
-    private String contactPhone;
-    private String city;
->>>>>>> origin/master
     @SerializedName("work")
     String workType;
     String startTime;
     String endTime;
     String numNeed;
     String timeStamp;
-<<<<<<< HEAD
 
-=======
-    String status;
->>>>>>> origin/master
     public ProjectBean(){
         setTimeStamp(System.currentTimeMillis()+"");
     }

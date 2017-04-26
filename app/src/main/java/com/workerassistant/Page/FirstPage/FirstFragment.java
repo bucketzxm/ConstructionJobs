@@ -51,7 +51,8 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
     private TextView tvCity,tvWorkType;
 //    private SwipeRefreshLayout lay_fresh;
     private LeftPersonAdapter topPersonAdapter;
-    private static int PAGE_SIZE = 5;
+//    TOP 12的人
+    private static int PAGE_SIZE = 12;
     private List<PersonBean> topPersonData = new ArrayList<>();
     private List<ProjectBean> topProjectData = new ArrayList<>();
     private RightProjectAdapter topProjectAdapter;
@@ -211,7 +212,13 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
             }
             @Override
             public void onNext(List<ProjectBean> beanList) {
-                topProjectAdapter.clearAddDataList(beanList);
+                List<ProjectBean> lists = new ArrayList<ProjectBean>();
+                for(int i =0;i<beanList.size();i++){
+                    if(i>PAGE_SIZE)
+                        break;
+                    lists.add(beanList.get(i));
+                }
+                topProjectAdapter.clearAddDataList(lists);
                 topProjectAdapter.notifyDataSetChanged();
             }
         });
@@ -251,7 +258,13 @@ public class FirstFragment extends Fragment {//implements SwipeRefreshLayout.OnR
             }
             @Override
             public void onNext(List<PersonBean> beanList) {
-                topPersonAdapter.clearAddDataList(beanList);
+                List<PersonBean> lists = new ArrayList<PersonBean>();
+                for(int i =0;i<beanList.size();i++){
+                    if(i>PAGE_SIZE)
+                        break;
+                    lists.add(beanList.get(i));
+                }
+                topPersonAdapter.clearAddDataList(lists);
                 topPersonAdapter.notifyDataSetChanged();
             }
         });

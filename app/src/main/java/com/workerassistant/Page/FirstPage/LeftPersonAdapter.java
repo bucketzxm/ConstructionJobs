@@ -57,12 +57,11 @@ public class LeftPersonAdapter extends BaseAdapter {
         holder.tvName.setText(list.get(position).getName());
         float rating = 0;
         if (list.get(position).getRating() == null){
-            rating = 2.5f;
+            rating = Float.parseFloat(Math.ceil(Math.random()*5)+"");
         }else{
             rating = Integer.parseInt(list.get(position).getRating());
         }
         holder.ratingBar.setRating(rating);
-
         return convertView;
     }
     public void clearAddDataList(List<PersonBean> beanList){
@@ -95,23 +94,4 @@ public class LeftPersonAdapter extends BaseAdapter {
         MaterialRatingBar ratingBar;
     }
 
-
-
 }
-
-
-
-
-
-//        //选中和没选中时，设置不同的颜色
-//        if (position == selectedPosition){
-//            convertView.setBackgroundResource(R.color.popup_right_bg);
-//        }else{
-//            convertView.setBackgroundResource(R.drawable.tab_shape_filter_white_button_text_color);
-//        }
-
-//        if (list.get(position).getSecondList() != null && list.get(position).getSecondList().size() > 0) {
-//            holder.nameTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_right_black_18dp, 0);
-//        } else {
-//            holder.nameTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//        }
