@@ -66,7 +66,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     private static final String TAG = "ThirdFragment";
     private View rootView = null;//缓存Fragment view
     private netConfigure net = netConfigure.getInstance();
-    private static int PAGE_SIZE = 3;
+    private static int PAGE_SIZE = 4;
     private LFRecyclerView recycleview;
     private ThirdPageListAdapter adapter;
     private List<ProjectBean> datas  = new ArrayList<ProjectBean>();

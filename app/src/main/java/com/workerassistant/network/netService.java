@@ -34,8 +34,6 @@ public class netService {
                  @Query("start")int start,@Query("end")int end
                  ,@Query("city")String city,@Query("work")String workType);
 
-
-
          @GET("project/")
          Call<List<ProjectBean>> getIndexProject(
                  @Query("start")int start,@Query("end")int end
@@ -53,11 +51,4 @@ public class netService {
              Call<PersonBean> insertPerson(@Body RequestBody route);//传入的参数为RequestBody
     }
 
-
-
-//    public interface RequestServes {
-//        @POST("mobileLogin/submit.html")
-//        Call<String> getString(@Query("loginname") String loginname,
-//                               @Query("nloginpwd") String nloginpwd);
-//    }
 }

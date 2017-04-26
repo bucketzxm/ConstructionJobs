@@ -1,5 +1,7 @@
 package com.workerassistant.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,12 +12,13 @@ public class ProjectBean {
     String contactName;
     String contactPhone;
     String city;
+    @SerializedName("work")
     String workType;
     String startTime;
     String endTime;
     String numNeed;
     String timeStamp;
-    String statue;
+
     public ProjectBean(){
         setTimeStamp(System.currentTimeMillis()+"");
     }
