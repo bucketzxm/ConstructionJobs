@@ -1,6 +1,8 @@
 package com.workerassistant.Page.FourthPage;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,9 +13,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.workerassistant.R;
+import com.workerassistant.Util.Constant;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+
+import static com.workerassistant.Util.Constant.responseEditSelfInfo;
 
 /**
  * Created by eva on 2017/4/13.
@@ -24,7 +29,7 @@ public class FourthFragment extends Fragment {//implements SwipeRefreshLayout.On
         FourthFragment f = new FourthFragment();
         return f;
     }
-    public static int ForSelfInfo = 40;
+
     private View rootView = null;//缓存Fragment view
 //    private OneRecycleAdapter adapter;
 //    private SwipeRefreshLayout lay_fresh;
@@ -45,7 +50,8 @@ public class FourthFragment extends Fragment {//implements SwipeRefreshLayout.On
     private ImageView sefi;
     private ImageView sefiBg;
     private TextView btnEditInfo;
-    private TextView tvName,tvWorkType,tvIdentity,tvcity,tvphone;
+
+    private TextView tvName,tvWorkType,tvLevel,tvCity,tvphone,tvAge;
     private void InitBase()
     {
 
@@ -66,56 +72,65 @@ public class FourthFragment extends Fragment {//implements SwipeRefreshLayout.On
         btnEditInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), EditSelfInfoActivity.class),ForSelfInfo);
+                startActivityForResult(new Intent(getActivity(), EditSelfInfoActivity.class), Constant.requestEditSelfInfo);
+
             }
         });
 
-    }
-
-
-/*
-    private void initBase() {
-        RecyclerView recyclerView = (RecyclerView) this.rootView.findViewById(R.id.nearpage_rv_list);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 6, GridLayoutManager.VERTICAL, false));
-//        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        List<Cloth> results = new ArrayList<>();
-
-        for(int i=0;i<18;i++)
-        {
-            results.add(new Cloth());
-        }
-
-        if(newDatashow!=null&&!newDatashow.isEmpty()) {
-//            for (Cloth item : newDatashow) {
-//                results.remove(1);
-//            }
-            results.addAll(1, newDatashow);
-        }
-        dataHot = results;
-        recyclerView.setAdapter(adapter = new OneRecycleAdapter(getActivity(),dataHot));
+        tvName =  (TextView) rootView.findViewById(R.id.fourth_page_my_name);
+        tvCity =  (TextView) rootView.findViewById(R.id.fourth_page_my_city);
+        tvLevel  =  (TextView) rootView.findViewById(R.id.fourth_page_my_level);
+        tvAge  =  (TextView) rootView.findViewById(R.id.fourth_page_my_age);
+        tvWorkType =  (TextView) rootView.findViewById(R.id.fourth_page_my_work_type);
+        tvphone =  (TextView) rootView.findViewById(R.id.fourth_page_my_phone);
+        //        从SharedPreferences获取数据:
+        SharedPreferences preferences=getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        String name=preferences.getString("name", "");
+        String age=preferences.getString("age", "");
+        String phone=preferences.getString("phone", "");
+        String level=preferences.getString("level", "");
+        String city=preferences.getString("city", "");
+        String workType=preferences.getString("workType", "");
+        tvName.setText(name);
+        tvCity.setText(age);
+        tvLevel.setText(phone);
+        tvAge.setText(level);
+        tvWorkType.setText(city);
+        tvphone.setText(workType);
     }
 
     @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lay_fresh.setRefreshing(false);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data == null){
+            return;
+        }
+        Bundle bundle = data.getExtras();
+        if(bundle == null){
+            return;
+        }
+        if(requestCode!=Constant.requestEditSelfInfo)
+            return;
+        switch (resultCode){
+            case responseEditSelfInfo:
+                tvName.setText(bundle.getString("name",""));
+                tvphone.setText(bundle.getString("phone",""));
+                tvAge.setText(bundle.getString("age",""));
+                tvLevel.setText(bundle.getString("level",""));
+                tvCity.setText(bundle.getString("city",""));
+                tvWorkType.setText(bundle.getString("workType",""));
 
-//                List<Cloth>newdata = adapter.InitPhotoList();
-//                if(!newdata.equals(newDatashow)&&!newDatashow.isEmpty())
-//                {
-//                    newDatashow = newdata;
-//                }
-//
-//
-//                if(!newDatashow.isEmpty()) {
-//                    adapter.addALL(1, newDatashow);
-//                }
-                adapter.postAsynHttp();
-                adapter.notifyDataSetChanged();
-            }
-        }, 1000);
-    }*/
+                SharedPreferences preferences=getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor=preferences.edit();
+                editor.putString("name", bundle.getString("name",""));
+                editor.putString("phone", bundle.getString("phone",""));
+                editor.putString("age", bundle.getString("age",""));
+                editor.putString("level", bundle.getString("level",""));
+                editor.putString("city", bundle.getString("city",""));
+                editor.putString("workType", bundle.getString("workType",""));
+                editor.apply();
+
+                break;
+        }
+    }
 }

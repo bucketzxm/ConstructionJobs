@@ -1293,7 +1293,8 @@
         <item>油漆工</item>
     </string-array>
     <string-array name="level">
-        <item>普通工人</item>
+        <item>老板</item>
+        <item>工人</item>
         <item>包工头</item>
     </string-array>
 </resources>

@@ -1,5 +1,7 @@
 package com.workerassistant.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ public class PersonBean {
     String phone;
     String level;
     String city;
+    @SerializedName("work")
     String workType;
     String rating;
     String timeStamp;

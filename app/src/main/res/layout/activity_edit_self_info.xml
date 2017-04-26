@@ -13,7 +13,6 @@
 
         <GridLayout
             android:layout_marginTop="24dp"
-            android:id="@+id/sec_popup_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -22,6 +21,57 @@
             android:paddingBottom="16dp"
             android:paddingRight="24dp"
             android:columnCount="1" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="地点："
+                    />
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/edit_self_info_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="12dp"
+                    android:textSize="16sp"
+                    android:text="上海"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:layout_marginBottom="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="工种："
+                    />
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/edit_self_info_work_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="12dp"
+                    android:textSize="16sp"
+                    android:text="混凝土工"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
+                    />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,11 +81,11 @@
                 android:gravity="center_vertical"
                 >
                 <TextView
-                    android:layout_weight="2"
+                    android:layout_weight="4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="我的名字："
+                    android:text="名字："
                     />
                 <EditText
                     android:layout_weight="1"
@@ -55,35 +105,12 @@
                 android:gravity="center_vertical"
                 >
                 <TextView
-                    android:layout_weight="2"
+                    android:layout_weight="4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="我的工种："
-                    />
-                <EditText
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:id="@+id/edit_self_info_name"
-                    android:layout_gravity="fill"
-                    style="@style/edit_text_blue"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="16dp"
-                android:gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_weight="2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="手机号码："
+                    android:inputType="phone"
+                    android:text="手机："
                     />
                 <EditText
                     android:layout_weight="1"
@@ -102,45 +129,55 @@
                 android:paddingBottom="16dp"
                 android:gravity="center_vertical"
                 >
-                <TextView
-                    android:layout_weight="2"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="我的身份："
-                    />
-                <EditText
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="身份："
+                        />
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/edit_self_info_level"
+                        android:layout_weight="1"
+                        android:spinnerMode="dialog"
+                        android:entries="@array/level"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:id="@+id/edit_self_info_level"
-                    android:layout_gravity="fill"
-                    style="@style/edit_text_blue"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="16dp"
-                android:gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_weight="2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="我的城市："
-                    />
-                <EditText
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:id="@+id/edit_self_info_city"
-                    android:layout_gravity="fill"
-                    style="@style/edit_text_blue"
-                    />
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="年龄："
+                        />
+                    <EditText
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:id="@+id/edit_self_info_age"
+                        android:layout_gravity="fill"
+                        android:inputType="number"
+                        style="@style/edit_text_blue"
+                        />
+
+                </LinearLayout>
             </LinearLayout>
+
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -151,7 +188,7 @@
                 android:columnCount="4"
                 android:rowCount="1">
                 <Button
-                    android:id="@+id/sec_popup_btn_reset"
+                    android:id="@+id/edit_self_info_reset"
                     android:layout_width="100dp"
                     android:layout_height="36dp"
                     android:background="@drawable/btnsharp"
@@ -162,7 +199,7 @@
                     android:textColor="#ededed"/>
 
                 <Button
-                    android:id="@+id/sec_popup_btn_ok"
+                    android:id="@+id/edit_self_info_submit"
                     android:layout_width="100dp"
                     android:layout_height="36dp"
                     android:layout_marginRight="16dp"

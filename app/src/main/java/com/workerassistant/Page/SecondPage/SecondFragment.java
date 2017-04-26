@@ -186,8 +186,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void call(CityBean cityBean) {
                         tvCity.setText(cityBean.getCity());
-                        Refresh();
-//                        选中后更新
+//                        选中后更新Popup中的（故不需要刷新Refresh())
                     }
                 });
         tvWorkType = (TextView) view.findViewById(R.id.second_popup_work_type);
@@ -202,8 +201,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                     @Override
                     public void call(WorkTypeBean workTypeBean) {
                         tvWorkType.setText(workTypeBean.getWorkTypeName());
-                        Refresh();
-//                        选中后更新
+//                        选中后更新Popup中的（故不需要刷新Refresh())
                     }
                 });
         btnSubmit = (Button)view.findViewById(R.id.second_popup_submit);
@@ -212,13 +210,39 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
             @Override
             public void onClick(View v) {
                 //清空
-
+                btnReset.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        etPhone.setText("");
+                        etNumber.setText("");
+                        etContactPerson.setText("");
+                        etStartTime.setText("");
+                        etEndTime.setText("");
+                    }
+                });
             }
         });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //送出结果
+                if(etStartTime.getText().equals("")||etEndTime.getText().equals("")){
+                    Toast.makeText(getActivity(),"时间不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(checkTimeValid()>0){
+                    Toast.makeText(getActivity(),"结束时间不能小于开始时间",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(etPhone.getText().equals("")){
+                    Toast.makeText(getActivity(),"联系方式不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(etContactPerson.getText().equals("")){
+                    Toast.makeText(getActivity(),"联系人不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 ProjectBean projectBean = new ProjectBean();
                 projectBean.setCity(tvCity.getText().toString());
                 projectBean.setContactName(etContactPerson.getText().toString());
@@ -229,11 +253,11 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                 projectBean.setWorkType(tvWorkType.getText().toString());
                 net.insertProject(projectBean);
                 //送出后刷新另一个页面
-//                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
-//                changeAnswerEvent.setTarget("thirdFragment");
-//                changeAnswerEvent.setAnswer("onFresh");
-//                RxBus.getDefault().post(changeAnswerEvent);
                 popupWindow.dismiss();
+                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
+                changeAnswerEvent.setTarget("thirdFragment");
+                changeAnswerEvent.setAnswer("onFresh");
+                RxBus.getDefault().post(changeAnswerEvent);
                 MainActivity mainActivity = (MainActivity)getActivity();
                 mainActivity.jumpToFragment(3);
             }
@@ -258,15 +282,14 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                 .subscribe(new Action1<ChangeAnswerEvent>() {
                     @Override
                     public void call(ChangeAnswerEvent changeAnswerEvent) {
-                        Refresh();
-//                        String target = changeAnswerEvent.getTarget();
-//                        String answer = changeAnswerEvent.getAnswer();
-//                        if(target!=null && answer!=null){
-//                            if(target.equals("secondFragment")
-//                                    && answer.equals("onFresh")){
-//                                onRefresh();
-//                            }
-//                        }
+                        String target = changeAnswerEvent.getTarget();
+                        String answer = changeAnswerEvent.getAnswer();
+                        if(target!=null && answer!=null){
+                            if(target.equals("secondFragment")
+                                    && answer.equals("onFresh")){
+                                Refresh();
+                            }
+                        }
                     }
                 });
         tvTopCity = (TextView)rootView.findViewById(R.id.topbar_page_2_current_city);
@@ -352,6 +375,12 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         Log.d(TAG,"workType:"+res);
         return res;
     }
+    private int checkTimeValid(){
+        String startTime = etStartTime.getText().toString();
+        String endTime = etEndTime.getText().toString();
+        return startTime.compareTo(endTime);
+
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -368,7 +397,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
             Log.d(TAG, "hidden " + hidden);
 
         }else{
-            Refresh();
+//            Refresh();
             Log.d(TAG,"hidden "+ hidden);
         }
     }
@@ -381,7 +410,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         netService.ApiService apiService = net.getPersonService();
         final Call<List<PersonBean>> callIndexPerson =
                 apiService.getIndexPerson(getStartIndex(), getStartIndex()+PAGE_SIZE
-                        ,null,null);
+                        ,getSelectCity(),getSelectWorkType());
         Log.d(TAG,"endIndex:"+ getStartIndex()+"+"+String.valueOf(getStartIndex()+PAGE_SIZE));
         Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
             @Override
@@ -454,7 +483,7 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
             netService.ApiService apiService = net.getPersonService();
             final Call<List<PersonBean>> callIndexPerson =
                     apiService.getIndexPerson(getStartIndex(), getStartIndex()+PAGE_SIZE
-                    ,null,null);
+                            ,getSelectCity(),getSelectWorkType());
         Log.d(TAG,"endIndex:"+ getStartIndex()+"+"+ String.valueOf(getStartIndex()+PAGE_SIZE));
             Observable.create(new Observable.OnSubscribe<List<PersonBean>>() {
                 @Override
@@ -496,7 +525,6 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
                 });
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -509,17 +537,29 @@ public class SecondFragment extends Fragment  implements OnItemClickListener, LF
         }
         switch (requestCode) {
             case Constant.requestThirdTopCity:
-                tvTopCity.setText(bundle.getString("City", "没有选择"));
+//                tvTopCity.setText(bundle.getString("City", "没有选择"));
+                setCity(bundle.getString("City", "没有选择"));
                 break;
             case Constant.requestThirdTopWorkType:
-                tvTopWorkType.setText(bundle.getString("WorkType", "没有选择"));
+                setWorkType(bundle.getString("WorkType", "没有选择"));
                 break;
         }
+    }
+    public void setCity(String city){
+        if(tvTopCity == null)
+            return;
+        tvTopCity.setText(city);
+        Refresh();
+    }
+    public void setWorkType(String workType){
+        if(tvTopWorkType == null)
+            return;
+        tvTopWorkType.setText(workType);
+        Refresh();
     }
     @Override
     public void onRecyclerViewScrollChange(View view, int i, int i1) {
 
     }
-
 
 }

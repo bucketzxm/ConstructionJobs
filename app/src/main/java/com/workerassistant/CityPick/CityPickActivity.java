@@ -5,20 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.workerassistant.CustomUI.IndexBar.bean.BaseIndexPinyinBean;
 import com.workerassistant.CustomUI.IndexBar.widget.IndexBar;
+import com.workerassistant.CustomUI.adapter.CommonAdapter;
 import com.workerassistant.CustomUI.suspension.SuspensionDecoration;
 import com.workerassistant.MainActivity;
 import com.workerassistant.R;
 import com.workerassistant.Util.Constant;
+import com.workerassistant.Util.rxbus.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +39,13 @@ public class CityPickActivity extends AppCompatActivity {
     private CityAdapter mAdapter;
     private HeaderRecyclerAndFooterWrapperAdapter mHeaderAdapter;
     private LinearLayoutManager mManager;
-    private List<CityBean> mDatas;
+
+    //设置给InexBar、ItemDecoration的完整数据集
+    private List<BaseIndexPinyinBean> mSourceDatas;
+    //头部数据源
+    private List<CityListHeaderBean> mHeaderDatas;
+    //主体部分数据源（城市数据）
+    private List<CityBean> mBodyDatas;
 
     private SuspensionDecoration mDecoration;
 
@@ -65,31 +76,71 @@ public class CityPickActivity extends AppCompatActivity {
     private void initList(){
         mRv = (RecyclerView) findViewById(R.id.rv);
         mRv.setLayoutManager(mManager = new LinearLayoutManager(this));
+        mSourceDatas = new ArrayList<>();
+        mHeaderDatas = new ArrayList<>();
+        List<String> hotCitys = new ArrayList<>();
+        mHeaderDatas.add(new CityListHeaderBean(hotCitys, "热门城市", "热"));
+        mSourceDatas.addAll(mHeaderDatas);
 
-        mAdapter = new CityAdapter(this, mDatas);
+//        mAdapter = new Adapter(this, R.layout.meituan_item_select_city, mBodyDatas);
+        mAdapter = new CityAdapter(this, mBodyDatas);
         mHeaderAdapter = new HeaderRecyclerAndFooterWrapperAdapter(mAdapter) {
             @Override
             protected void onBindHeaderHolder(ViewHolder holder, int headerPos, int layoutId, Object o) {
 //            头部最热待添加
-//                if( layoutId == R.layout.search_view){
-//                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            // startActivity(new Intent(v.getContext(), CityPickActivity.class));
-//                        }
-//                    });
-//                    return;
-//                }
-//                holder.setText(R.id.tvCity, (String) o);
+                switch (layoutId) {
+                    case R.layout.meituan_item_header:
+                        final CityListHeaderBean meituanHeaderBean = (CityListHeaderBean) o;
+                        //网格
+                        RecyclerView recyclerView = holder.getView(R.id.rvCity);
+                        recyclerView.setAdapter(
+                                new CommonAdapter<String>(CityPickActivity.this, R.layout.meituan_item_header_item, meituanHeaderBean.getCityList()) {
+                                    @Override
+                                    public void convert(ViewHolder holder, final String cityName) {
+                                        holder.setText(R.id.tvName, cityName);
+                                        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+//                                                Toast.makeText(CityPickActivity.this, "HotcityName:" + cityName, Toast.LENGTH_SHORT).show();
+                                        CityBean city = new CityBean();
+                                        city.setCity(cityName);
+                                        RxBus.getDefault().post(city);
+//                另外一种方法返回值
+                                        Intent intent = new Intent();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("City",city.getCity());
+                                        intent.putExtras(bundle);
+                                        intent.setClass(CityPickActivity.this, MainActivity.class);
+                                        setResult(Constant.requestThirdTopCity,intent);
+                                        finish();
+                                            }
+                                        });
+                                    }
+                                });
+                        recyclerView.setLayoutManager(new GridLayoutManager(CityPickActivity.this, 3));
+                        break;
+//                    case R.layout.meituan_item_header_top:
+//                        MeituanTopHeaderBean meituanTopHeaderBean = (MeituanTopHeaderBean) o;
+//                        holder.setText(R.id.tvCurrent, meituanTopHeaderBean.getTxt());
+//                        break;
+                    default:
+                        break;
+                }
             }
         };
-//        mHeaderAdapter.setHeaderView(0,R.layout.item_city, "头部");
-//        mHeaderAdapter.setHeaderView(0,R.layout.search_view, "搜索框");
-        mRv.setAdapter(mHeaderAdapter);
-        mRv.addItemDecoration(mDecoration = new SuspensionDecoration(this, mDatas).setHeaderViewCount(mHeaderAdapter.getHeaderViewCount()));
+        mHeaderAdapter.setHeaderView(0,R.layout.search_view, "搜索框");
+//        mHeaderAdapter.setHeaderView(1, R.layout.meituan_item_header_top, new MeituanTopHeaderBean("当前位置：上海徐汇"));
+        mHeaderAdapter.setHeaderView(1, R.layout.meituan_item_header, mHeaderDatas.get(0));
 
-        //如果add两个，按照先后顺序，依次渲染
-        mRv.addItemDecoration(new DividerItemDecoration(CityPickActivity.this, DividerItemDecoration.VERTICAL));
+//        mRv.addItemDecoration(mDecoration = new SuspensionDecoration(this, mDatas).setHeaderViewCount(mHeaderAdapter.getHeaderViewCount()));
+        mRv.setAdapter(mHeaderAdapter);
+        mRv.addItemDecoration(mDecoration = new SuspensionDecoration(this, mSourceDatas)
+                .setmTitleHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 35, getResources().getDisplayMetrics()))
+                .setColorTitleBg(0xffefefef)
+                .setTitleFontSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()))
+                .setColorTitleFont(CityPickActivity.this.getResources().getColor(android.R.color.black))
+                .setHeaderViewCount(mHeaderAdapter.getHeaderViewCount() - mHeaderDatas.size()));
+        mRv.addItemDecoration(new DividerItemDecoration(CityPickActivity.this, LinearLayoutManager.VERTICAL));
 
         //使用indexBar
         mTvSideBarHint = (TextView) findViewById(R.id.tvSideBarHint);//HintTextView
@@ -97,7 +148,8 @@ public class CityPickActivity extends AppCompatActivity {
 
         mIndexBar.setmPressedShowTextView(mTvSideBarHint)//设置HintTextView
                 .setNeedRealIndex(true)//设置需要真实的索引
-                .setmLayoutManager(mManager);//设置RecyclerView的LayoutManager
+                .setmLayoutManager(mManager)//设置RecyclerView的LayoutManager
+                .setHeaderViewCount(mHeaderAdapter.getHeaderViewCount() - mHeaderDatas.size());
 
         initDatas(getResources().getStringArray(R.array.provinces));
     }
@@ -108,7 +160,7 @@ public class CityPickActivity extends AppCompatActivity {
         title.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mSearchFragment.bindDatas(mDatas);
+                mSearchFragment.bindDatas(mBodyDatas);
                 mProgressBar.setVisibility(View.GONE);
             }
         },200);
@@ -148,23 +200,41 @@ public class CityPickActivity extends AppCompatActivity {
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mDatas = new ArrayList<>();
+                mBodyDatas = new ArrayList<>();
                 for (int i = 0; i < data.length; i++) {
                     CityBean cityBean = new CityBean();
                     cityBean.setCity(data[i]);//设置城市名称
-                    mDatas.add(cityBean);
+                    mBodyDatas.add(cityBean);
                 }
+                //先排序
+                mIndexBar.getDataHelper().sortSourceDatas(mBodyDatas);
 
-                mIndexBar.setmSourceDatas(mDatas)//设置数据
-                        .setHeaderViewCount(mHeaderAdapter.getHeaderViewCount())//设置HeaderView数量
-                        .invalidate();
-
-                mAdapter.setDatas(mDatas);
+                mAdapter.setDatas(mBodyDatas);
                 mHeaderAdapter.notifyDataSetChanged();
-                mDecoration.setmDatas(mDatas);
+                mSourceDatas.addAll(mBodyDatas);
+
+                mIndexBar.setmSourceDatas(mSourceDatas)//设置数据
+                        .invalidate();
+                mDecoration.setmDatas(mSourceDatas);
             }
         }, 200);
 
+        //延迟两秒加载头部
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CityListHeaderBean header = mHeaderDatas.get(0);
+                List<String> hotCitys = new ArrayList<>();
+                hotCitys.add("上海");
+                hotCitys.add("北京");
+                hotCitys.add("广州");
+                hotCitys.add("深圳");
+
+                header.setCityList(hotCitys);
+                mHeaderAdapter.notifyItemRangeChanged(0, 1);
+
+            }
+        }, 200);
     }
 
     /**
@@ -174,11 +244,17 @@ public class CityPickActivity extends AppCompatActivity {
      */
     public void updateDatas(View view) {
         for (int i = 0; i < 5; i++) {
-            mDatas.add(new CityBean("新城"));
+            mBodyDatas.add(new CityBean("新城市"));
+            mBodyDatas.add(new CityBean("新城市1"));
         }
-        mIndexBar.setmSourceDatas(mDatas)
-                .invalidate();
+        //先排序
+        mIndexBar.getDataHelper().sortSourceDatas(mBodyDatas);
+        mSourceDatas.clear();
+        mSourceDatas.addAll(mHeaderDatas);
+        mSourceDatas.addAll(mBodyDatas);
+
         mHeaderAdapter.notifyDataSetChanged();
+        mIndexBar.invalidate();
     }
     public void initTopbar(String titleString){
         title=(TextView)findViewById(R.id.title_toolbar);

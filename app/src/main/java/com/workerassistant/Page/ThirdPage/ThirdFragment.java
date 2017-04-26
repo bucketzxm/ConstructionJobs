@@ -86,6 +86,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
     private Animation animIn, animOut;
     private EditText etName,etPhone;
     private Spinner etLevel;
+
     private TextView tvCity,tvWorkType,tvTopCity,tvTopWorkType;
     private EditText etAge;
     private Subscription mSubscriptionWorkType,mSubscriptionCity;
@@ -199,13 +200,34 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
             @Override
             public void onClick(View v) {
                 //清空
-
+                btnReset.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //清空
+                        btnReset.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                etPhone.setText("");
+                                etAge.setText("");
+                                etName.setText("");
+                            }
+                        });
+                    }
+                });
             }
         });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                送出结果
+                if(etName.getText().equals("")){
+                    Toast.makeText(getActivity(),"姓名不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(etPhone.getText().equals("")){
+                    Toast.makeText(getActivity(),"联系方式不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 PersonBean personBean  = new PersonBean();
 //                personBean.setAge(Integer.parseInt(etAge.getText().toString()));
                 personBean.setAge( etAge.getText().toString() );
@@ -218,11 +240,12 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                 net.insertPerson(personBean);
 //                送出后刷新页面
 
-//                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
-//                changeAnswerEvent.setTarget("secondFragment");
-//                changeAnswerEvent.setAnswer("onFresh");
-//                RxBus.getDefault().post(changeAnswerEvent);
+
                 MainActivity mainActivity = (MainActivity)getActivity();
+                ChangeAnswerEvent changeAnswerEvent = new ChangeAnswerEvent();
+                changeAnswerEvent.setTarget("secondFragment");
+                changeAnswerEvent.setAnswer("onFresh");
+                RxBus.getDefault().post(changeAnswerEvent);
                 mainActivity.jumpToFragment(2);
                 popupWindow.dismiss();
             }
@@ -238,7 +261,7 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
         }else{
 //           hidden false   表示界面可见
             Log.d(TAG,"hidden "+ hidden);
-            Refresh();
+//            Refresh();
         }
     }
     private void popupWindowClick()
@@ -259,17 +282,15 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                 .subscribe(new Action1<ChangeAnswerEvent>() {
                     @Override
                     public void call(ChangeAnswerEvent changeAnswerEvent) {
-                        Refresh();
-//                            String target = changeAnswerEvent.getTarget();
-//                            String answer = changeAnswerEvent.getAnswer();
-//                        Log.d("thirdFragment","mSubscriptionOnfresh:"+target+" "+answer);
-//                            if(target!=null && answer!=null){
-//                                if(target.equals("thirdFragment")
-//                                        && answer.equals("onFresh")){
-//
-//                                    onRefresh();
-//                                }
-//                            }
+                            String target = changeAnswerEvent.getTarget();
+                            String answer = changeAnswerEvent.getAnswer();
+                        Log.d("thirdFragment","mSubscriptionOnfresh:"+target+" "+answer);
+                            if(target!=null && answer!=null){
+                                if(target.equals("thirdFragment")
+                                        && answer.equals("onFresh")){
+                                    Refresh();
+                                }
+                            }
                     }
                 });
 
@@ -483,7 +504,5 @@ public class ThirdFragment extends Fragment  implements OnItemClickListener, LFR
                 tvTopWorkType.setText(bundle.getString("WorkType","没有选择"));
                 break;
         }
-
-
     }
 }
