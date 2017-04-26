@@ -87,18 +87,18 @@ public class PersonBean {
         this.workType = workType;
     }
 
-    @Override
-    public String toString() {
-        Map<String,String>map = new HashMap<>();
-        map.put("name",getName());
-        map.put("age",getAge());
-        map.put("phone",getPhone());
-        map.put("level",getLevel());
-        map.put("city",getCity());
-        map.put("workType",getWorkType());
-        map.put("rating",getRating());
-        return map.toString();
-
-    }
+//    @Override
+//    public String toString() {
+//        Map<String,String>map = new HashMap<>();
+//        map.put("name",getName());
+//        map.put("age",getAge());
+//        map.put("phone",getPhone());
+//        map.put("level",getLevel());
+//        map.put("city",getCity());
+//        map.put("work",getWorkType());
+//        map.put("rating",getRating());
+//        return map.toString();
+//
+//    }
 }
 
