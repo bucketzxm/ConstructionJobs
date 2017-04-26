@@ -124,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="@color/md_grey_50">
+        android:background="@color/white">
         <ListView
             android:background="@color/white"
             android:layout_marginRight="2dp"
@@ -138,7 +138,10 @@
             android:dividerHeight="0.1dp"
             android:scrollingCache="false"
             />
-
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_300"/>
         <ListView
             android:background="@color/white"
             android:layout_marginLeft="2dp"

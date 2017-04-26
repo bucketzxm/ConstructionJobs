@@ -38,6 +38,13 @@
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="人待做"/>
+            android:text="人"/>
+        <TextView
+            android:textSize="12sp"
+            android:id="@+id/top_project_item_number_statue"
+            android:textColor="@color/md_green_500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 待做" />
     </LinearLayout>
 </LinearLayout>

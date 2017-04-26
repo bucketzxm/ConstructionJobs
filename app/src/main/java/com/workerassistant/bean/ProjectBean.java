@@ -15,7 +15,7 @@ public class ProjectBean {
     String endTime;
     String numNeed;
     String timeStamp;
-
+    String statue;
     public ProjectBean(){
         setTimeStamp(System.currentTimeMillis()+"");
     }
